@@ -13,8 +13,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -52,7 +55,7 @@ public class CameraActivity extends AppCompatActivity {
 
 
         activity= this;
-
+        getImagesPath(activity);
         mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
         int numberOfColumns = 4;
@@ -93,21 +96,35 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        myPictureList.add(new ImageElement(R.drawable.joe1));
+
+        /*myPictureList.add(new ImageElement(R.drawable.joe1));
         myPictureList.add(new ImageElement(R.drawable.joe2));
-        myPictureList.add(new ImageElement(R.drawable.joe3));
-        myPictureList.add(new ImageElement(R.drawable.joe1));
-        myPictureList.add(new ImageElement(R.drawable.joe2));
-        myPictureList.add(new ImageElement(R.drawable.joe3));
-        myPictureList.add(new ImageElement(R.drawable.joe1));
-        myPictureList.add(new ImageElement(R.drawable.joe2));
-        myPictureList.add(new ImageElement(R.drawable.joe3));
-        myPictureList.add(new ImageElement(R.drawable.joe1));
-        myPictureList.add(new ImageElement(R.drawable.joe2));
-        myPictureList.add(new ImageElement(R.drawable.joe3));
-        myPictureList.add(new ImageElement(R.drawable.joe1));
-        myPictureList.add(new ImageElement(R.drawable.joe2));
-        myPictureList.add(new ImageElement(R.drawable.joe3));
+        myPictureList.add(new ImageElement(R.drawable.joe3));*/
+
+    }
+    public static ArrayList<String> getImagesPath(Activity activity) {
+        Uri uri;
+        ArrayList<String> listOfAllImages = new ArrayList<String>();
+        Cursor cursor;
+        int column_index_data, column_index_folder_name;
+        String PathOfImage = null;
+        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        String[] projection = { MediaStore.MediaColumns.DATA,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+
+        cursor = activity.getContentResolver().query(uri, projection, null,
+                null, null);
+
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        column_index_folder_name = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        while (cursor.moveToNext()) {
+            PathOfImage = cursor.getString(column_index_data);
+
+            listOfAllImages.add(PathOfImage);
+        }
+        return listOfAllImages;
     }
 
     private void checkPermissions(final Context context) {
