@@ -42,6 +42,7 @@ public class CameraActivity extends AppCompatActivity {
     private List<ImageElement> myPictureList = new ArrayList<>();
     private RecyclerView.Adapter  mAdapter;
     private RecyclerView mRecyclerView;
+    private List<String> myPicturePath = new ArrayList<>();
 
     private Activity activity;
 
@@ -96,7 +97,8 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void initData() {
-
+        myPicturePath=getImagesPath(activity);
+        myPictureList.addAll(getImagePath(myPicturePath));
         /*myPictureList.add(new ImageElement(R.drawable.joe1));
         myPictureList.add(new ImageElement(R.drawable.joe2));
         myPictureList.add(new ImageElement(R.drawable.joe3));*/
@@ -226,6 +228,14 @@ public class CameraActivity extends AppCompatActivity {
         List<ImageElement> imageElementList= new ArrayList<>();
         for (File file: returnedPhotos){
             ImageElement element= new ImageElement(file);
+            imageElementList.add(element);
+        }
+        return imageElementList;
+    }
+    private List<ImageElement> getImagePath(List<String> returnedPath) {
+        List<ImageElement> imageElementList= new ArrayList<>();
+        for (String path: returnedPath){
+            ImageElement element= new ImageElement(path);
             imageElementList.add(element);
         }
         return imageElementList;

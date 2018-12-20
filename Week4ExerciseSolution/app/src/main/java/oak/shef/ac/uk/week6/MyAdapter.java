@@ -52,6 +52,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
                 Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).file.getAbsolutePath());
                 holder.imageView.setImageBitmap(myBitmap);
             }
+            else if (items.get(position).path!=null){
+                Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).path);
+                holder.imageView.setImageBitmap(myBitmap);
+            }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

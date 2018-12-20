@@ -9,7 +9,7 @@ import java.io.File;
 class ImageElement {
     int image=-1;
     File file=null;
-
+    String path=null;
 
     public ImageElement(int image) {
         this.image = image;
@@ -18,5 +18,8 @@ class ImageElement {
 
     public ImageElement(File fileX) {
         file= fileX;
+    }
+    public ImageElement(String path) {
+        this.path= path;
     }
 }

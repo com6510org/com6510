@@ -30,7 +30,10 @@ public class ShowImageActivity extends AppCompatActivity {
                 } else if (element.file!=null) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(element.file.getAbsolutePath());
                    //print
-                    Log.i( "justintimberlake", element.file.getAbsolutePath());
+                    imageView.setImageBitmap(myBitmap);
+                }
+                else if (element.path!=null) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(element.path);
                     imageView.setImageBitmap(myBitmap);
                 }
             }
