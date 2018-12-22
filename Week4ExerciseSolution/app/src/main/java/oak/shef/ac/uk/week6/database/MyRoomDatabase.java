@@ -17,7 +17,7 @@ public abstract class MyRoomDatabase extends RoomDatabase {
             synchronized (MyRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = android.arch.persistence.room.Room.databaseBuilder(context.getApplicationContext(),
-                            MyRoomDatabase.class, "number_database")
+                            MyRoomDatabase.class, "foto_database")
                             // Wipes and rebuilds instead of migrating if no Migration object.
                             // Migration is not part of this codelab.
                             .fallbackToDestructiveMigration()

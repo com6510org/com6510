@@ -6,6 +6,8 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import java.util.List;
+
 @Dao
 public interface MyDAO {
     @Insert
@@ -21,8 +23,15 @@ public interface MyDAO {
     @Query("SELECT * FROM fotoData ORDER BY RANDOM() LIMIT 1")
     LiveData<FotoData> retrieveOneFoto();
 
+
+    @Query("SELECT * FROM fotoData WHERE path= :fotopath")
+    List<FotoData> retrieveSelectFoto(String fotopath);
+
     @Delete
     void deleteAll(FotoData... fotoData);
+
+    @Query("DELETE FROM fotodata WHERE 1")
+    void deleteAllFOTO();
 
     @Query("SELECT COUNT(*) FROM fotoData")
     int howManyElements();

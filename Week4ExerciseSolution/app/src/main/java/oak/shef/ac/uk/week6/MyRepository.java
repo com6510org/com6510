@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.List;
 import java.util.Random;
 
 import oak.shef.ac.uk.week6.database.FotoData;
@@ -27,15 +28,21 @@ class MyRepository extends ViewModel {
     public LiveData<FotoData> getFotoData() {
         return mDBDao.retrieveOneFoto();
     }
-
+    public void deletAll(){
+        new deleteAsyncTask(mDBDao).execute();
+    }
+    public List<FotoData> getSelectFotoData(String path){
+        Log.i("TAG", mDBDao.retrieveSelectFoto(path)+"");
+        return mDBDao.retrieveSelectFoto(path);
+    }
     /**
      * called by the UI to request the generation of a new random number
      */
-    public void generateNewFoto() {
+    public void generateNewFoto(String path) {
         //insert in here a new foto maybe
         String t = "title example";
         String d= "description";
-        String p= "path";
+        String p= path;
         new insertAsyncTask(mDBDao).execute(new FotoData(t, d, p));
     }
 
@@ -51,8 +58,24 @@ class MyRepository extends ViewModel {
             mAsyncTaskDao.insert(params[0]);
             Log.i("MyRepository", "number generated: "+params[0].getPath()+"");
             // you may want to uncomment this to check if numbers have been inserted
-            //            int ix=mAsyncTaskDao.howManyElements();
-            //            Log.i("TAG", ix+"");
+            int ix=mAsyncTaskDao.howManyElements();
+            Log.i("number of path", ix+"");
+            return null;
+        }
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Void, Void, Void> {
+        private MyDAO mAsyncTaskDao;
+
+        deleteAsyncTask(MyDAO dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final Void... voids) {
+            mAsyncTaskDao.deleteAllFOTO();
+            // you may want to uncomment this to check if numbers have been inserted
+            int ix=mAsyncTaskDao.howManyElements();
+            Log.i("Delete number", ix+"");
             return null;
         }
     }

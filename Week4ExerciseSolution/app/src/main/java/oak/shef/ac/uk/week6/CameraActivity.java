@@ -15,9 +15,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,12 +27,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import oak.shef.ac.uk.week6.database.FotoData;
+import oak.shef.ac.uk.week6.database.MyDAO;
+import oak.shef.ac.uk.week6.database.MyRoomDatabase;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -43,9 +52,9 @@ public class CameraActivity extends AppCompatActivity {
     private RecyclerView.Adapter  mAdapter;
     private RecyclerView mRecyclerView;
     private List<String> myPicturePath = new ArrayList<>();
-
+    private MyDAO mDBDao;
     private Activity activity;
-
+    private MyViewModel myViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +63,38 @@ public class CameraActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+//        MyRoomDatabase db = MyRoomDatabase.getDatabase(this);
+//        mDBDao = db.myDao();
 
         activity= this;
-        getImagesPath(activity);
         mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
         int numberOfColumns = 4;
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+
+
+
+
+        myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
+        myViewModel.deleteAllElement();
+        initData();
         mAdapter= new MyAdapter(myPictureList);
         mRecyclerView.setAdapter(mAdapter);
 
-        initData();
+        // Add an observer on the LiveData. The onChanged() method fires
+        // when the observed data changes and the activity is
+        // in the foreground.
+//        myViewModel.getFotoDataToDisplay().observe(this, new Observer<FotoData>(){
+//            @Override
+//            public void onChanged(@Nullable final FotoData newValue) {
+//                // if database is empty
+//                if (newValue==null)
+//                    return;
+//                else
+//                    myPictureList.add(new ImageElement(newValue.getPath()));
+//
+//            }});
+
 
         // required by Android 6.0 +
         checkPermissions(getApplicationContext());
@@ -99,9 +129,19 @@ public class CameraActivity extends AppCompatActivity {
     private void initData() {
         myPicturePath=getImagesPath(activity);
         myPictureList.addAll(getImagePath(myPicturePath));
+        for(int i=0;i<myPicturePath.size();i++){
+            myViewModel.generateNewFoto(myPicturePath.get(i));
+        }
         /*myPictureList.add(new ImageElement(R.drawable.joe1));
         myPictureList.add(new ImageElement(R.drawable.joe2));
         myPictureList.add(new ImageElement(R.drawable.joe3));*/
+
+//        for(int i=0;i<myPicturePath.size();i++){
+//            String t = "title example";
+//            String d= "description";
+//            String p= myPicturePath.get(i);
+//            new insertAsyncTask(mDBDao).execute(new FotoData(t, d, p));
+//        }
 
     }
     public static ArrayList<String> getImagesPath(Activity activity) {
@@ -180,6 +220,23 @@ public class CameraActivity extends AppCompatActivity {
 
 
 
+    private static class insertAsyncTask extends AsyncTask<FotoData, Void, Void> {
+        private MyDAO mAsyncTaskDao;
+        private LiveData<FotoData> fotoData;
+
+        insertAsyncTask(MyDAO dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final FotoData... params) {
+            mAsyncTaskDao.insert(params[0]);
+            Log.i("MyRepository", "number generated: "+params[0].getPath()+"");
+            // you may want to uncomment this to check if numbers have been inserted
+            int ix=mAsyncTaskDao.howManyElements();
+            Log.i("TAG", ix+"");
+            return null;
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -215,6 +272,9 @@ public class CameraActivity extends AppCompatActivity {
      */
     private void onPhotosReturned(List<File> returnedPhotos) {
         myPictureList.addAll(getImageElements(returnedPhotos));
+        for(int i=0;i<returnedPhotos.size();i++){
+            myViewModel.generateNewFoto(returnedPhotos.get(i).getAbsolutePath());
+        }
         mAdapter.notifyDataSetChanged();
         mRecyclerView.scrollToPosition(returnedPhotos.size() - 1);
     }
