@@ -23,6 +23,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_below="@+id/image_item"
+            android:maxLines="1"
             android:text="fdfdfd" />
         <TextView
             android:id="@+id/textViewDesc"
@@ -31,6 +32,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_below="@+id/textView"
+            android:maxLines="1"
             android:text="fdfdf" />
     </LinearLayout>
 </LinearLayout>
