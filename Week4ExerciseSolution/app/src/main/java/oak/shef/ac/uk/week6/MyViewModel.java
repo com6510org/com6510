@@ -12,14 +12,12 @@ import oak.shef.ac.uk.week6.database.FotoData;
 
 public class MyViewModel extends AndroidViewModel {
     private final MyRepository mRepository;
-
     LiveData<FotoData> fotoDataToDisplay;
-    List<FotoData> initData;
     public MyViewModel (Application application) {
         super(application);
         // creation and connection to the Repository
         mRepository = new MyRepository(application);
-        fotoDataToDisplay = mRepository.getFotoData();
+
     }
 
 
@@ -27,7 +25,8 @@ public class MyViewModel extends AndroidViewModel {
      * getter for the live data
      * @return
      */
-    LiveData<FotoData> getFotoDataToDisplay() {
+    LiveData<FotoData> getFotoDataToDisplay(String path) {
+        fotoDataToDisplay = mRepository.getFoto(path);
         if (fotoDataToDisplay == null) {
             fotoDataToDisplay = new MutableLiveData<FotoData>();
         }
@@ -40,7 +39,9 @@ public class MyViewModel extends AndroidViewModel {
     public void generateNewFoto(String path) {
         mRepository.generateNewFoto(path);
     }
-    public List<FotoData> getAllFoto(){return initData;}
+
+
+
     public void deleteAllElement(){
         mRepository.deletAll();
     }

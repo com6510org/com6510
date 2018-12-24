@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -13,7 +14,7 @@ import oak.shef.ac.uk.week6.database.FotoData;
 import oak.shef.ac.uk.week6.database.MyDAO;
 import oak.shef.ac.uk.week6.database.MyRoomDatabase;
 
-class MyRepository extends ViewModel {
+class MyRepository extends ViewModel{
     private final MyDAO mDBDao;
 
     public MyRepository(Application application) {
@@ -31,10 +32,11 @@ class MyRepository extends ViewModel {
     public void deletAll(){
         new deleteAsyncTask(mDBDao).execute();
     }
-    public List<FotoData> getSelectFotoData(String path){
-        Log.i("TAG", mDBDao.retrieveSelectFoto(path)+"");
+    public LiveData<FotoData> getFoto(String path) {
         return mDBDao.retrieveSelectFoto(path);
     }
+
+//    }
     /**
      * called by the UI to request the generation of a new random number
      */
@@ -45,6 +47,7 @@ class MyRepository extends ViewModel {
         String p= path;
         new insertAsyncTask(mDBDao).execute(new FotoData(t, d, p));
     }
+
 
     private static class insertAsyncTask extends AsyncTask<FotoData, Void, Void> {
         private MyDAO mAsyncTaskDao;
@@ -59,7 +62,7 @@ class MyRepository extends ViewModel {
             Log.i("MyRepository", "number generated: "+params[0].getPath()+"");
             // you may want to uncomment this to check if numbers have been inserted
             int ix=mAsyncTaskDao.howManyElements();
-            Log.i("number of path", ix+"");
+            Log.i("InsertNumber", ix+"");
             return null;
         }
     }
@@ -79,4 +82,5 @@ class MyRepository extends ViewModel {
             return null;
         }
     }
+
 }
