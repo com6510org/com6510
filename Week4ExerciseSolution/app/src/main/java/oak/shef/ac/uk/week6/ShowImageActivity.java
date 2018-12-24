@@ -36,6 +36,10 @@ public class ShowImageActivity extends AppCompatActivity {
                     Bitmap myBitmap = BitmapFactory.decodeFile(element.path);
                     imageView.setImageBitmap(myBitmap);
                 }
+                else if (element.fotodata!=null) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(element.fotodata.getPath());
+                    imageView.setImageBitmap(myBitmap);
+                }
             }
 
         }

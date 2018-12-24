@@ -6,10 +6,13 @@ package oak.shef.ac.uk.week6;
 
 import java.io.File;
 
+import oak.shef.ac.uk.week6.database.FotoData;
+
 class ImageElement {
     int image=-1;
     File file=null;
     String path=null;
+    FotoData fotodata= null;
 
     public ImageElement(int image) {
         this.image = image;
@@ -21,5 +24,8 @@ class ImageElement {
     }
     public ImageElement(String path) {
         this.path= path;
+    }
+    public ImageElement(FotoData fotodata) {
+        this.fotodata= fotodata;
     }
 }

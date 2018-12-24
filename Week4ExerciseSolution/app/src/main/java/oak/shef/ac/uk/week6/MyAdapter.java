@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -56,6 +57,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
                 Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).path);
                 holder.imageView.setImageBitmap(myBitmap);
             }
+            else if (items.get(position).fotodata!=null){
+                Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).fotodata.getPath());
+                holder.imageView.setImageBitmap(myBitmap);
+                holder.textView.setText(items.get(position).fotodata.getTitle());
+                holder.textViewDesc.setText(items.get(position).fotodata.getDescription());
+            }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -81,12 +88,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
     public class View_Holder extends RecyclerView.ViewHolder  {
         ImageView imageView;
-
-
+        TextView textView;
+        TextView textViewDesc;
         View_Holder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image_item);
-
+            textView= (TextView) itemView.findViewById(R.id.textView);
+            textViewDesc= (TextView) itemView.findViewById(R.id.textViewDesc);
         }
 
 

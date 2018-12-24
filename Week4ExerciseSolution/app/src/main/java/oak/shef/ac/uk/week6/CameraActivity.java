@@ -49,7 +49,7 @@ public class CameraActivity extends AppCompatActivity {
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
     private static final String TAG = "CameraActivity";
     private List<ImageElement> myPictureList = new ArrayList<>();
-    private List<String> initdata = new ArrayList<>();
+    private List<FotoData> initdata = new ArrayList<>();
     private RecyclerView.Adapter  mAdapter;
     private RecyclerView mRecyclerView;
     private List<String> myPicturePath = new ArrayList<>();
@@ -74,7 +74,7 @@ public class CameraActivity extends AppCompatActivity {
         activity= this;
         mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
-        int numberOfColumns = 4;
+        int numberOfColumns = 3;
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
 
 
@@ -82,7 +82,7 @@ public class CameraActivity extends AppCompatActivity {
 
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
 
-//        myViewModel.deleteAllElement();
+        myViewModel.deleteAllElement();
 
         QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
             public void processFinish(List<FotoData> output) {
@@ -90,12 +90,12 @@ public class CameraActivity extends AppCompatActivity {
                 if (!output.isEmpty()){
                     for(int i=0;i<output.size();i++){
                         Log.i("Query", "out put size: "+output.size()+" out put path: "+output.get(i).getPath()+"");
-                        initdata.add(output.get(i).getPath());
+                        initdata.add(output.get(i));
                     }
 //                    for(int a=0;a<initdata.size();a++){
 //                        Log.i("PictureList", initdata.get(a)+"");
 //                    }
-                    myPictureList.addAll(getImagePath(initdata));
+                    myPictureList.addAll(getFotoData(initdata));
                     Log.i("CheckPoint",myPictureList.size()+" !3! ");
                     mAdapter= new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
@@ -147,8 +147,13 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        List<FotoData> newList= new ArrayList<>();
         myPicturePath=getImagesPath(activity);
-        myPictureList.addAll(getImagePath(myPicturePath));
+        for (int i=0; i< myPicturePath.size(); i++)
+        {
+            newList.add( new FotoData("title Example", "Description example", myPicturePath.get(i)));
+        }
+        myPictureList.addAll(getFotoData(newList));
         for(int i=0;i<myPicturePath.size();i++){
             myViewModel.generateNewFoto(myPicturePath.get(i));
             Log.i("PathValue", myPicturePath.get(i)+"");
@@ -315,15 +320,23 @@ public class CameraActivity extends AppCompatActivity {
         }
         return imageElementList;
     }
-    private List<ImageElement> getImagePath(List<String> returnedPath) {
+   /* private List<ImageElement> getImagePath(List<String> returnedPath) {
         List<ImageElement> imageElementList= new ArrayList<>();
         for (String path: returnedPath){
             ImageElement element= new ImageElement(path);
             imageElementList.add(element);
         }
         return imageElementList;
-    }
+    }*/
 
+    private List<ImageElement> getFotoData(List<FotoData> returnedPath) {
+        List<ImageElement> imageElementList= new ArrayList<>();
+        for (FotoData path: returnedPath){
+            ImageElement element= new ImageElement(path);
+            imageElementList.add(element);
+        }
+        return imageElementList;
+    }
 
     public Activity getActivity() {
         return activity;
