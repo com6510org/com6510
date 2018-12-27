@@ -18,7 +18,7 @@ import oak.shef.ac.uk.week6.database.MyDAO;
 import oak.shef.ac.uk.week6.database.MyRoomDatabase;
 
 
-public class ShowSearchActivity  extends AppCompatActivity {
+public class ShowDetailedInfoActivity extends AppCompatActivity {
 
     private MyDAO mDBDao;
     private Activity activity;
@@ -45,7 +45,7 @@ public class ShowSearchActivity  extends AppCompatActivity {
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
 
 
-      QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
+        QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
             public void processFinish(List<FotoData> output) {
                 if (!output.isEmpty()){
                     myPictureList.addAll(getFotoData(output));
@@ -57,10 +57,10 @@ public class ShowSearchActivity  extends AppCompatActivity {
 
                     Log.i("CheckPoint",myPictureList.size()+"  !2!  ");
 
-                   mAdapter= new MyAdapter(myPictureList);
+                    mAdapter= new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
-                   TextView textMessage = (TextView) findViewById(R.id.textMessage);
-                   textMessage.setText("Sorry we couldn't find anything");
+                    TextView textMessage = (TextView) findViewById(R.id.textMessage);
+                    textMessage.setText("Sorry we couldn't find anything");
                 }
             }
         });
