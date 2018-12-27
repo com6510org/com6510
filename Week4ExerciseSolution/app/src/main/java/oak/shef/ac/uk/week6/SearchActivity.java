@@ -18,7 +18,7 @@ import java.util.Calendar;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String CERO = "0";
-    private static final String SLASH = "/";
+    private static final String COLON = ":";
     public final Calendar c = Calendar.getInstance();
     final int month = c.get(Calendar.MONTH);
     final int day = c.get(Calendar.DAY_OF_MONTH);
@@ -41,9 +41,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             public void onClick(View view) {
                 String title= textTitle.getText().toString();
                 String desc= textDesc.getText().toString();
+                String date= theDate.getText().toString();
                 Intent intent = new Intent(getBaseContext(), ShowSearchActivity.class);
                 intent.putExtra("TITLE", title);
                 intent.putExtra("DESC", desc);
+                intent.putExtra("DATE", date);
                 startActivity(intent);
             }
         });
@@ -66,12 +68,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 final int actualMonth = month + 1;
                 String fDay= (dayOfMonth < 10) ? CERO + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
                 String fMonth = (actualMonth < 10) ? CERO + String.valueOf(actualMonth) : String.valueOf(actualMonth);
-                theDate.setText(fDay + SLASH + fMonth + SLASH + year);
+                theDate.setText(year+ COLON + fMonth + COLON + fDay);
 
 
             }
         }, year, month, day);
-        //Muestro el widget
         datePicker.show();
 
     }

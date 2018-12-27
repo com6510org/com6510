@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +94,39 @@ public class ShowSearchActivity  extends AppCompatActivity
             List<FotoData> fd=new ArrayList<>();
             String title= getIntent().getStringExtra("TITLE");
             String desc= getIntent().getStringExtra("DESC");
-            fd=mAsyncTaskDao.SearchFotos(title, desc);
+            String date= getIntent().getStringExtra("DATE");
+
+            if (title.isEmpty() && desc.isEmpty() && !date.isEmpty() )
+            {
+                fd=mAsyncTaskDao.SearchFotosByDate( date);
+            }
+            else if(!title.isEmpty() && desc.isEmpty() && date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByTitle( title);
+            }
+            else if(title.isEmpty() && !desc.isEmpty() && date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByDescription( desc);
+            }
+            else if(!title.isEmpty() && !desc.isEmpty() && date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByDescTitle( desc, title);
+            }
+            else if(title.isEmpty() && !desc.isEmpty() && !date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByDescDate( desc, date);
+            }
+            else if(!title.isEmpty() && desc.isEmpty() && !date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByTitleDate( title, date);
+            }
+            else
+            {
+                fd=mAsyncTaskDao.SearchFotos(title, desc, date);
+
+            }
+
+
             return fd;
         }
         @Override

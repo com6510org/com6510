@@ -29,8 +29,26 @@ public interface MyDAO {
     @Query("SELECT * FROM fotoData WHERE path= :fotopath LIMIT 1")
     LiveData<FotoData> retrieveSelectFoto(String fotopath);
 
-    @Query("SELECT * FROM fotoData WHERE title LIKE '%'||:title||'%' or description LIKE '%'||:desc||'%'")
-    List<FotoData> SearchFotos(String title, String desc);
+    @Query("SELECT * FROM fotoData WHERE title LIKE '%'||:title||'%' or description LIKE '%'||:desc||'%' or date LIKE '%'||:date||'%'")
+    List<FotoData> SearchFotos(String title, String desc, String date);
+
+    @Query("SELECT * FROM fotoData WHERE date LIKE '%'||:date||'%'")
+    List<FotoData> SearchFotosByDate( String date);
+
+    @Query("SELECT * FROM fotoData WHERE title LIKE '%'||:title||'%'")
+    List<FotoData> SearchFotosByTitle( String title);
+
+    @Query("SELECT * FROM fotoData WHERE description LIKE '%'||:desc||'%'")
+    List<FotoData> SearchFotosByDescription( String desc);
+
+    @Query("SELECT * FROM fotoData WHERE description LIKE '%'||:desc||'%'  or  title LIKE '%'||:title||'%'")
+    List<FotoData> SearchFotosByDescTitle( String desc, String title);
+
+    @Query("SELECT * FROM fotoData WHERE description LIKE '%'||:desc||'%'  or  title LIKE '%'||:date||'%'")
+    List<FotoData> SearchFotosByDescDate( String desc, String date);
+
+    @Query("SELECT * FROM fotoData WHERE title LIKE '%'||:title||'%'  or  title LIKE '%'||:date||'%'")
+    List<FotoData> SearchFotosByTitleDate( String title, String date);
 
     @Delete
     void deleteAll(FotoData... fotoData);
