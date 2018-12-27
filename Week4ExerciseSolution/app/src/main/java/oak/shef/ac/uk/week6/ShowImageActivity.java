@@ -6,10 +6,17 @@ package oak.shef.ac.uk.week6;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 
 public class ShowImageActivity extends AppCompatActivity {
 
@@ -43,6 +50,17 @@ public class ShowImageActivity extends AppCompatActivity {
             }
 
         }
+
+        FloatingActionButton fabShowInformation = (FloatingActionButton) findViewById(R.id.fab_show_information);
+        fabShowInformation.setOnClickListener(new View.OnClickListener() {
+            View popupView = getLayoutInflater().inflate(R.layout.activity_popupwindow, null);
+            @Override
+            public void onClick(View view) {
+                PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                popupWindow.showAtLocation(view,Gravity.BOTTOM, 0, 0);
+            }
+        });
 
 
     }

@@ -19,8 +19,8 @@ import oak.shef.ac.uk.week6.database.MyDAO;
 import oak.shef.ac.uk.week6.database.MyRoomDatabase;
 
 
-public class ShowSearchActivity  extends AppCompatActivity
-{
+public class ShowSearchActivity  extends AppCompatActivity {
+
     private MyDAO mDBDao;
     private Activity activity;
     private MyViewModel myViewModel;
