@@ -36,11 +36,17 @@ public class MyViewModel extends AndroidViewModel {
     /**
      * request by the UI to generate a new random number
      */
-    public void generateNewFoto(String path) {
-        mRepository.generateNewFoto(path);
+    public void generateNewFoto(String path,String date,String latitude,String longitude) {
+        mRepository.generateNewFoto(path,date,latitude,longitude);
     }
 
 
+//    LiveData<FotoData> CheckAndGetFoto(){
+//        if (fotoDataToDisplay == null) {
+//            fotoDataToDisplay = new MutableLiveData<FotoData>();
+//        }
+//        return fotoDataToDisplay;
+//        }
 
     public void deleteAllElement(){
         mRepository.deletAll();

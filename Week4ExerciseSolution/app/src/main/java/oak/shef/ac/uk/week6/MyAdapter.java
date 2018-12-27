@@ -62,6 +62,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
                 holder.imageView.setImageBitmap(myBitmap);
                 holder.textView.setText(items.get(position).fotodata.getTitle());
                 holder.textViewDesc.setText(items.get(position).fotodata.getDescription());
+                holder.textViewDate.setText(items.get(position).fotodata.getDate());
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,11 +91,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         ImageView imageView;
         TextView textView;
         TextView textViewDesc;
+        TextView textViewDate;
         View_Holder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image_item);
             textView= (TextView) itemView.findViewById(R.id.textView);
             textViewDesc= (TextView) itemView.findViewById(R.id.textViewDesc);
+            textViewDate= (TextView) itemView.findViewById(R.id.textViewDate);
         }
 
 

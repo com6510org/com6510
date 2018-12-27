@@ -32,5 +32,13 @@
             android:paddingRight="10dp"
             android:layout_below="@+id/textView"
             android:text="fdfdf" />
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_below="@+id/textView"
+            android:text="fdfdf" />
     </LinearLayout>
 </LinearLayout>
