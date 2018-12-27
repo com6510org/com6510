@@ -7,8 +7,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="oak.shef.ac.uk.week6.CameraActivity">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/search"
+        app:showAsAction="always" />
 </menu>

@@ -30,6 +30,12 @@
         <activity
             android:name=".ShowImageActivity"
             />
+        <activity
+            android:name=".SearchActivity"
+            />
+        <activity
+            android:name=".ShowSearchActivity"
+            />
 
     </application>
 
