@@ -29,6 +29,9 @@ public interface MyDAO {
     @Query("SELECT * FROM fotoData WHERE path= :fotopath LIMIT 1")
     LiveData<FotoData> retrieveSelectFoto(String fotopath);
 
+    @Query("SELECT * FROM fotoData WHERE title LIKE '%'||:title||'%' or description LIKE '%'||:desc||'%'")
+    List<FotoData> SearchFotos(String title, String desc);
+
     @Delete
     void deleteAll(FotoData... fotoData);
 

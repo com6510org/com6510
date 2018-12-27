@@ -23,7 +23,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_below="@+id/image_item"
-            android:text="fdfdfd" />
+            android:maxLines="1"
+            android:text="" />
         <TextView
             android:id="@+id/textViewDesc"
             android:layout_width="wrap_content"
@@ -31,14 +32,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_below="@+id/textView"
-            android:text="fdfdf" />
-        <TextView
-            android:id="@+id/textViewDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_below="@+id/textView"
-            android:text="fdfdf" />
+            android:maxLines="1"
+            android:text="" />
     </LinearLayout>
 </LinearLayout>
