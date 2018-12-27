@@ -40,12 +40,15 @@ class MyRepository extends ViewModel{
     /**
      * called by the UI to request the generation of a new random number
      */
-    public void generateNewFoto(String path) {
+    public void generateNewFoto(String path,String date,String latitude,String longitude) {
         //insert in here a new foto maybe
         String t = "title example";
         String d= "description";
         String p= path;
-        new insertAsyncTask(mDBDao).execute(new FotoData(t, d, p));
+        String da=date;
+        String lat=latitude;
+        String lon=longitude;
+        new insertAsyncTask(mDBDao).execute(new FotoData(t, d, p,da,lat,lon));
     }
 
 

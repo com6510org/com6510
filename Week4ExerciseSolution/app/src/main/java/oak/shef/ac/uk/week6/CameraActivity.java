@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -85,7 +86,7 @@ public class CameraActivity extends AppCompatActivity {
 
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
 
-        myViewModel.deleteAllElement();
+//        myViewModel.deleteAllElement();
 
         QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
             public void processFinish(List<FotoData> output) {
@@ -95,13 +96,11 @@ public class CameraActivity extends AppCompatActivity {
                         Log.i("Query", "out put size: "+output.size()+" out put path: "+output.get(i).getPath()+"");
                         initdata.add(output.get(i));
                     }
-//                    for(int a=0;a<initdata.size();a++){
-//                        Log.i("PictureList", initdata.get(a)+"");
-//                    }
                     myPictureList.addAll(getFotoData(initdata));
                     Log.i("CheckPoint",myPictureList.size()+" !3! ");
                     mAdapter= new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
+
                 }
                 else if(output.isEmpty()){
                     initData();
@@ -166,28 +165,62 @@ public class CameraActivity extends AppCompatActivity {
                 .setAllowMultiplePickInGallery(true);
     }
 
+    private double score2dimensionality(String string) {
+        double dimensionality = 0.0;
+        if (null==string){
+            return dimensionality;
+        }
+
+        String[] split = string.split(",");
+        for (int i = 0; i < split.length; i++) {
+
+            String[] s = split[i].split("/");
+            double v = Double.parseDouble(s[0]) / Double.parseDouble(s[1]);
+            dimensionality=dimensionality+v/Math.pow(60,i);
+        }
+        return dimensionality;
+    }
+
+    private void storeIntoRoom(String path){
+        try {
+            ExifInterface exif = new ExifInterface(path);
+            String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
+            String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            double lat = score2dimensionality(latitude);
+            double lon = score2dimensionality(longitude);
+            Log.i("Date", " path: "+path+"  Date: "+date+"  latitude: "+lat+"  longitude: "+lon);
+            myViewModel.generateNewFoto(path,date,latitude,longitude);
+        }
+        catch(Exception ee){
+            Log.i("Date", "date or location is not exist");
+        }
+
+    }
     private void initData() {
         List<FotoData> newList= new ArrayList<>();
         myPicturePath=getImagesPath(activity);
         for (int i=0; i< myPicturePath.size(); i++)
         {
-            newList.add( new FotoData("title Example", "Description example", myPicturePath.get(i)));
+            try {
+                String path = myPicturePath.get(i);
+                ExifInterface exif = new ExifInterface(path);
+                String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                double lat = score2dimensionality(latitude);
+                double lon = score2dimensionality(longitude);
+                Log.i("Date", " path: "+path+"  Date: "+date+"  latitude: "+lat+"  longitude: "+lon);
+                newList.add(new FotoData("title Example", "Description example", myPicturePath.get(i),date,latitude,longitude));
+            }
+            catch(Exception ee){
+                Log.i("Date", "date or location is not exist");
+            }
         }
         myPictureList.addAll(getFotoData(newList));
         for(int i=0;i<myPicturePath.size();i++){
-            myViewModel.generateNewFoto(myPicturePath.get(i));
-            Log.i("PathValue", myPicturePath.get(i)+"");
+            storeIntoRoom(myPicturePath.get(i));
         }
-        /*myPictureList.add(new ImageElement(R.drawable.joe1));
-        myPictureList.add(new ImageElement(R.drawable.joe2));
-        myPictureList.add(new ImageElement(R.drawable.joe3));*/
-
-//        for(int i=0;i<myPicturePath.size();i++){
-//            String t = "title example";
-//            String d= "description";
-//            String p= myPicturePath.get(i);
-//            new insertAsyncTask(mDBDao).execute(new FotoData(t, d, p));
-//        }
 
     }
     public static ArrayList<String> getImagesPath(Activity activity) {
@@ -214,6 +247,8 @@ public class CameraActivity extends AppCompatActivity {
         }
         return listOfAllImages;
     }
+
+
 
     private void checkPermissions(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
@@ -299,7 +334,7 @@ public class CameraActivity extends AppCompatActivity {
      * @param returnedPhotos
      */
     private void onPhotosReturned( List<File> returnedPhotos) {
-        myPictureList.addAll(getImageElements(returnedPhotos));
+
         String path=null;
         for(int i=0;i<returnedPhotos.size();i++){
             path=returnedPhotos.get(i).getPath();
@@ -308,10 +343,9 @@ public class CameraActivity extends AppCompatActivity {
             myViewModel.getFotoDataToDisplay(path).observe(this, new Observer<FotoData>(){
                 @Override
                 public void onChanged(@Nullable final FotoData newValue) {
-                    // if database is empty
                     if (newValue==null) {
                         Log.i("TagQuery", "Not exist!!!!!!");
-                        myViewModel.generateNewFoto(finalPath);
+                        storeIntoRoom(finalPath);
                     }
                     else {
                         Log.i("TagQuery", "Already exist!!!!!!");
@@ -321,6 +355,7 @@ public class CameraActivity extends AppCompatActivity {
 
 
         }
+        myPictureList.addAll(getImageElements(returnedPhotos));
         mAdapter.notifyDataSetChanged();
         mRecyclerView.scrollToPosition(returnedPhotos.size() - 1);
 
@@ -335,19 +370,24 @@ public class CameraActivity extends AppCompatActivity {
     private List<ImageElement> getImageElements(List<File> returnedPhotos) {
         List<ImageElement> imageElementList= new ArrayList<>();
         for (File file: returnedPhotos){
-            ImageElement element= new ImageElement(file);
-            imageElementList.add(element);
+            try{
+                String path=file.getAbsolutePath();
+                ExifInterface exif = new ExifInterface(path);
+                String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                double lat = score2dimensionality(latitude);
+                double lon = score2dimensionality(longitude);
+                Log.i("Date", " path: "+path+"  Date: "+date+"  latitude: "+lat+"  longitude: "+lon);
+                ImageElement element= new ImageElement(new FotoData("title Example", "Description example", path,date,latitude,longitude));
+                imageElementList.add(element);
+            }
+            catch(Exception ee){
+                Log.i("Date", "date or location is not exist");
+            }
         }
         return imageElementList;
     }
-   /* private List<ImageElement> getImagePath(List<String> returnedPath) {
-        List<ImageElement> imageElementList= new ArrayList<>();
-        for (String path: returnedPath){
-            ImageElement element= new ImageElement(path);
-            imageElementList.add(element);
-        }
-        return imageElementList;
-    }*/
 
     private List<ImageElement> getFotoData(List<FotoData> returnedPath) {
         List<ImageElement> imageElementList= new ArrayList<>();
