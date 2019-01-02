@@ -26,6 +26,9 @@ public interface MyDAO {
     @Query("SELECT * FROM fotoData")
     List<FotoData> retrieveAllFoto();
 
+    @Query("SELECT id, path FROM fotoData")
+    List<FotoData> retrieveAllPaths();
+
     @Query("SELECT * FROM fotoData WHERE path= :fotopath LIMIT 1")
     LiveData<FotoData> retrieveSelectFoto(String fotopath);
 
@@ -55,6 +58,8 @@ public interface MyDAO {
 
     @Query("DELETE FROM fotodata WHERE 1")
     void deleteAllFOTO();
+
+
 
     @Query("SELECT COUNT(*) FROM fotoData")
     int howManyElements();

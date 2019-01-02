@@ -38,6 +38,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +69,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the layout
         setContentView(R.layout.activity_camera);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,11 +88,13 @@ public class CameraActivity extends AppCompatActivity {
 
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
 
-        myViewModel.deleteAllElement();
+        //myViewModel.deleteAllElement();
 
-        QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
+
+      /*  QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
             public void processFinish(List<FotoData> output) {
-                Log.i("CheckPoint",output.size()+" !1! ");
+                // once the process of retrieving the data is finished
+                // if  there is something in the list
                 if (!output.isEmpty()){
                     for(int i=0;i<output.size();i++){
                         Log.i("Query", "out put size: "+output.size()+" out put path: "+output.get(i).getPath()+"");
@@ -102,6 +106,7 @@ public class CameraActivity extends AppCompatActivity {
                     mRecyclerView.setAdapter(mAdapter);
 
                 }
+                //if the list is empty
                 else if(output.isEmpty()){
                     initData();
                     Log.i("CheckPoint",myPictureList.size()+"  !2!  ");
@@ -113,10 +118,36 @@ public class CameraActivity extends AppCompatActivity {
         });
 
 
-        queryAllAsyncTask.execute();
+        queryAllAsyncTask.execute();*/
 
 
+         AsyncResponse response = new AsyncResponse(){
+            public void processFinish(List<FotoData> output) {
+                // once the process of retrieving the data is finished
+                // if  there is something in the list
+                if (!output.isEmpty()){
+                    for(int i=0;i<output.size();i++){
+                        Log.i("Query", "out put size: "+output.size()+" out put path: "+output.get(i).getPath()+"");
+                        initdata.add(output.get(i));
+                    }
+                    myPictureList.addAll(getFotoData(initdata));
+                    Log.i("CheckPoint",myPictureList.size()+" !3! ");
+                    mAdapter= new MyAdapter(myPictureList);
+                    mRecyclerView.setAdapter(mAdapter);
 
+                }
+                //if the list is empty
+                else if(output.isEmpty()){
+                    initData();
+                    Log.i("CheckPoint",myPictureList.size()+"  !2!  ");
+
+                    mAdapter= new MyAdapter(myPictureList);
+                    mRecyclerView.setAdapter(mAdapter);
+                }
+            }
+        };
+        myPicturePath=getImagesPath(activity);
+         myViewModel.getAllPhotos(response, myPicturePath);
 
 
         checkPermissions(getApplicationContext());
@@ -181,7 +212,7 @@ public class CameraActivity extends AppCompatActivity {
         return dimensionality;
     }
 
-    private void storeIntoRoom(String path){
+   /* private void storeIntoRoom(String path){
         try {
             ExifInterface exif = new ExifInterface(path);
             String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
@@ -196,7 +227,8 @@ public class CameraActivity extends AppCompatActivity {
             Log.i("Date", "date or location is not exist");
         }
 
-    }
+    }*/
+
     private void initData() {
         List<FotoData> newList= new ArrayList<>();
         myPicturePath=getImagesPath(activity);
@@ -211,18 +243,20 @@ public class CameraActivity extends AppCompatActivity {
                 double lat = score2dimensionality(latitude);
                 double lon = score2dimensionality(longitude);
                 Log.i("Date", " path: "+path+"  Date: "+date+"  latitude: "+lat+"  longitude: "+lon);
-                newList.add(new FotoData("title Example", "Description example", myPicturePath.get(i),date,latitude,longitude));
+                newList.add(new FotoData("add a title", "add a description", myPicturePath.get(i),date,latitude,longitude));
             }
             catch(Exception ee){
                 Log.i("Date", "date or location is not exist");
             }
         }
         myPictureList.addAll(getFotoData(newList));
-        for(int i=0;i<myPicturePath.size();i++){
+        myViewModel.generateNewFoto(newList);
+        /*for(int i=0;i<myPicturePath.size();i++){
             storeIntoRoom(myPicturePath.get(i));
-        }
+        }*/
 
     }
+
     public static ArrayList<String> getImagesPath(Activity activity) {
         Uri uri;
         ArrayList<String> listOfAllImages = new ArrayList<String>();
@@ -334,18 +368,38 @@ public class CameraActivity extends AppCompatActivity {
      * @param returnedPhotos
      */
     private void onPhotosReturned( List<File> returnedPhotos) {
+        final List<FotoData> addedPhotos= new ArrayList<>();
 
         String path=null;
         for(int i=0;i<returnedPhotos.size();i++){
             path=returnedPhotos.get(i).getPath();
-            Log.i("PathValue", returnedPhotos.get(i).getPath()+"");
             final String finalPath = path;
             myViewModel.getFotoDataToDisplay(path).observe(this, new Observer<FotoData>(){
                 @Override
                 public void onChanged(@Nullable final FotoData newValue) {
                     if (newValue==null) {
                         Log.i("TagQuery", "Not exist!!!!!!");
-                        storeIntoRoom(finalPath);
+                        //storeIntoRoom(finalPath);
+
+
+                        ExifInterface exif = null;
+                        try {
+                            exif = new ExifInterface(finalPath);
+                            String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                            String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                            String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                            double lat = score2dimensionality(latitude);
+                            double lon = score2dimensionality(longitude);
+                            Log.i("Date", " path: "+finalPath+"  Date: "+date+"  latitude: "+lat+"  longitude: "+lon);
+                            addedPhotos.add(new FotoData("add a title", "add a description", finalPath,date,latitude,longitude));
+
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+
                     }
                     else {
                         Log.i("TagQuery", "Already exist!!!!!!");
@@ -358,7 +412,7 @@ public class CameraActivity extends AppCompatActivity {
         myPictureList.addAll(getImageElements(returnedPhotos));
         mAdapter.notifyDataSetChanged();
         mRecyclerView.scrollToPosition(returnedPhotos.size() - 1);
-
+        myViewModel.generateNewFoto(addedPhotos);
 
     }
 
@@ -404,8 +458,8 @@ public class CameraActivity extends AppCompatActivity {
 
 
 
-
-    public class QueryAllAsyncTask extends AsyncTask<Void, Void, List<FotoData>> {
+    //this returns all the data that is in the DB in a list of type FotoData
+   /* public class QueryAllAsyncTask extends AsyncTask<Void, Void, List<FotoData>> {
         private MyDAO mAsyncTaskDao;
         public AsyncResponse delegate=null;
 
@@ -415,7 +469,6 @@ public class CameraActivity extends AppCompatActivity {
         }
         @Override
         protected List<FotoData> doInBackground(final Void... voids) {
-            // you may want to uncomment this to check if photo path have been inserted
             List<FotoData> fd=new ArrayList<>();
             fd=mAsyncTaskDao.retrieveAllFoto();
             return fd;
@@ -424,5 +477,5 @@ public class CameraActivity extends AppCompatActivity {
         protected void onPostExecute(List<FotoData> result) {
             delegate.processFinish(result);
         }
-    }
+    }*/
 }

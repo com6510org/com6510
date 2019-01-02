@@ -21,10 +21,7 @@ public class MyViewModel extends AndroidViewModel {
     }
 
 
-    /**
-     * getter for the live data
-     * @return
-     */
+
     LiveData<FotoData> getFotoDataToDisplay(String path) {
         fotoDataToDisplay = mRepository.getFoto(path);
         if (fotoDataToDisplay == null) {
@@ -33,22 +30,23 @@ public class MyViewModel extends AndroidViewModel {
         return fotoDataToDisplay;
     }
 
-    /**
-     * request by the UI to generate a new random number
-     */
-    public void generateNewFoto(String path,String date,String latitude,String longitude) {
-        mRepository.generateNewFoto(path,date,latitude,longitude);
+    public void generateNewFoto(List<FotoData> ListPhotos) {
+        mRepository.generateNewFoto(ListPhotos);
     }
 
+   /* public void generateNewFoto(String path,String date,String latitude,String longitude) {
+        mRepository.generateNewFoto(path,date,latitude,longitude);
+    }
+*/
 
-//    LiveData<FotoData> CheckAndGetFoto(){
-//        if (fotoDataToDisplay == null) {
-//            fotoDataToDisplay = new MutableLiveData<FotoData>();
-//        }
-//        return fotoDataToDisplay;
-//        }
 
     public void deleteAllElement(){
         mRepository.deletAll();
+    }
+
+
+    public void getAllPhotos(AsyncResponse resp, List<String> myPicturePath)
+    {
+        mRepository.getAllPhotos(resp, myPicturePath);
     }
 }
