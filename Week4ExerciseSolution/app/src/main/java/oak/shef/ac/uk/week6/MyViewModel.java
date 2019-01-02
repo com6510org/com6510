@@ -36,7 +36,7 @@ public class MyViewModel extends AndroidViewModel {
     /**
      * request by the UI to generate a new random number
      */
-    public void generateNewFoto(String path,String date,String latitude,String longitude) {
+    public void generateNewFoto(String path,String date,Double latitude,Double longitude) {
         mRepository.generateNewFoto(path,date,latitude,longitude);
     }
 
