@@ -12,6 +12,9 @@
     tools:context="oak.shef.ac.uk.week6.CameraActivity"
     tools:showIn="@layout/activity_camera">
 
+
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/grid_recycler_view"
         android:layout_width="0dp"

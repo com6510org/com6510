@@ -12,12 +12,12 @@ public class FotoData {
     private String description;
     private String path;
     private String date;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 
 
 
-    public FotoData(String title, String description, String path, String date,String latitude,String longitude) {
+    public FotoData(String title, String description, String path, String date,Double latitude,Double longitude) {
         this.title= title;
         this.description= description;
         this.path= path;
@@ -67,19 +67,19 @@ public class FotoData {
         this.date= date;
     }
 
-    public String getLatitude()
+    public Double getLatitude()
     {
         return latitude;
     }
-    public void setLatitude(String latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude= latitude;
     }
 
-    public String getLongitude()
+    public Double getLongitude()
     {
         return longitude;
     }
-    public void setLongitude(String longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude= longitude;
     }
 

@@ -30,8 +30,12 @@ public class MyViewModel extends AndroidViewModel {
         return fotoDataToDisplay;
     }
 
-    public void generateNewFoto(List<FotoData> ListPhotos) {
-        mRepository.generateNewFoto(ListPhotos);
+    /**
+     * request by the UI to generate a new random number
+     */
+    public void generateNewFoto(List<FotoData> list) {
+        mRepository.generateNewFoto(list);
+
     }
 
    /* public void generateNewFoto(String path,String date,String latitude,String longitude) {

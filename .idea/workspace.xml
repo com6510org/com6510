@@ -6,7 +6,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="92c793b5-9d0c-446b-82e8-f813034807b2" name="Default" comment="" />
+    <list default="true" id="92c793b5-9d0c-446b-82e8-f813034807b2" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/Week4ExerciseSolution/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/Week4ExerciseSolution/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Week4ExerciseSolution/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Week4ExerciseSolution/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Week4ExerciseSolution/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Week4ExerciseSolution/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Week4ExerciseSolution/app/src/main/java/oak/shef/ac/uk/week6/CameraActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Week4ExerciseSolution/app/src/main/java/oak/shef/ac/uk/week6/CameraActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Week4ExerciseSolution/app/src/main/res/layout/activity_camera.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Week4ExerciseSolution/app/src/main/res/layout/activity_camera.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,20 +23,30 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="828" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="AndroidView" />
-      <pane id="ProjectPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="com6510" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com6510" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -110,7 +126,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="828" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="3" />

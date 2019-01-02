@@ -71,10 +71,10 @@ class MyRepository extends ViewModel{
                                 String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
                                 String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
                                 String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-                                double lat = score2dimensionality(latitude);
-                                double lon = score2dimensionality(longitude);
+                                double lat =  score2dimensionalityLat(latitude);
+                                double lon = score2dimensionalityLon(longitude);
                                 Log.i("TERCER", " path: "+path+"  Date: "+date+"  latitude: "+lat+"  longitude: "+lon);
-                                new insertAsyncTask(mDBDao).execute(new FotoData("add a title", "add a description", path,date,latitude,longitude));
+                                new insertAsyncTask(mDBDao).execute(new FotoData("add a title", "add a description", path,date,lat,lon));
                             }
                             catch(Exception ee){
                                 Log.i("Date", "date or location is not exist");
@@ -94,20 +94,12 @@ class MyRepository extends ViewModel{
         selectAll.execute();
 
 
-        //delete all elements that are in allPaths and not in my picturePath
-
-
-
-        //return every foto data
-
-        //new QueryAllAsyncTask(mDBDao, resp).execute();
-
     }
 
 
-    private double score2dimensionality(String string) {
+    private double score2dimensionalityLat(String string) {
         double dimensionality = 0.0;
-        if (null==string){
+        if (null == string) {
             return dimensionality;
         }
 
@@ -116,32 +108,37 @@ class MyRepository extends ViewModel{
 
             String[] s = split[i].split("/");
             double v = Double.parseDouble(s[0]) / Double.parseDouble(s[1]);
-            dimensionality=dimensionality+v/Math.pow(60,i);
+            dimensionality = dimensionality + v / Math.pow(60, i);
         }
         return dimensionality;
     }
 
+    private double score2dimensionalityLon(String string) {
+        double dimensionality = 0.0;
+        if (null == string) {
+            return dimensionality;
+        }
+
+        String[] split = string.split(",");
+        for (int i = 0; i < split.length; i++) {
+
+            String[] s = split[i].split("/");
+            double v = Double.parseDouble(s[0]) / Double.parseDouble(s[1]);
+            dimensionality = dimensionality + v / Math.pow(60, i);
+        }
+        return dimensionality;
+    }
 
     public LiveData<FotoData> getFoto(String path) {
         return mDBDao.retrieveSelectFoto(path);
     }
 
 //    }
-    /**
-     * called by the UI to request the generation of a new random number
-     */
-   /* public void generateNewFoto(String path,String date,String latitude,String longitude) {
-        //insert in here a new foto maybe
-        String t = "title example";
-        String d= "description";
-        String p= path;
-        String da=date;
-        String lat=latitude;
-        String lon=longitude;
-        new insertAsyncTask(mDBDao).execute(new FotoData(t, d, p,da,lat,lon));
-    }*/
-    public void generateNewFoto(List<FotoData> listPhotos) {
-        Iterator<FotoData> iter;
+
+
+
+     public void generateNewFoto(List<FotoData> listPhotos) {
+       Iterator<FotoData> iter;
         for (iter = listPhotos.iterator(); iter.hasNext(); ) {
             FotoData f = iter.next();
             new insertAsyncTask(mDBDao).execute(f);
@@ -153,6 +150,7 @@ class MyRepository extends ViewModel{
 
     private static class insertAsyncTask extends AsyncTask<FotoData, Void, Void> {
         private MyDAO mAsyncTaskDao;
+
         insertAsyncTask(MyDAO dao) {
             mAsyncTaskDao = dao;
         }
