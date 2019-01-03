@@ -46,9 +46,7 @@ public class pickerActivity extends AppCompatActivity implements View.OnClickLis
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 final int actualMonth = month + 1;
                 String fDay= (dayOfMonth < 10) ? CERO + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
-                //Formateo el mes obtenido: antepone el 0 si son menores de 10
                 String fMonth = (actualMonth < 10) ? CERO + String.valueOf(actualMonth) : String.valueOf(actualMonth);
-                //Muestro la fecha con el formato deseado
                 theDate.setText(fDay + SLASH + fMonth + SLASH + year);
 
 
@@ -58,7 +56,6 @@ public class pickerActivity extends AppCompatActivity implements View.OnClickLis
              *También puede cargar los valores que usted desee
              */
         }, year, month, day);
-        //Muestro el widget
         datePicker.show();
 
     }

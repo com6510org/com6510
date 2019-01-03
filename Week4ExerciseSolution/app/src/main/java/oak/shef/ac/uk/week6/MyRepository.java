@@ -23,14 +23,10 @@ class MyRepository extends ViewModel{
         mDBDao = db.myDao();
     }
 
-    /**
-     * it gets the data when changed in the db and returns it to the ViewModel
-     * @return
-     */
     public LiveData<FotoData> getFotoData() {
         return mDBDao.retrieveOneFoto();
     }
-    public void deletAll(){
+    public void deleteAll(){
         new deleteAsyncTask(mDBDao).execute();
     }
 
@@ -45,7 +41,6 @@ class MyRepository extends ViewModel{
                     for( FotoData e: allPaths)
                     {
                         allStrings.add(e.getPath());
-                        Log.i("PRIMER LISTA", e.getPath());
                     }
                     int x=0;
                     for( String e:  new ArrayList<>(allStrings))
@@ -73,8 +68,7 @@ class MyRepository extends ViewModel{
                                 String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
                                 double lat =  score2dimensionalityLat(latitude);
                                 double lon = score2dimensionalityLon(longitude);
-                                Log.i("TERCER", " path: "+path+"  Date: "+date+"  latitude: "+lat+"  longitude: "+lon);
-                                new insertAsyncTask(mDBDao).execute(new FotoData("add a title", "add a description", path,date,lat,lon));
+                                new insertAsyncTask(mDBDao).execute(new FotoData("Add a title", "Add a description", path,date,lat,lon));
                             }
                             catch(Exception ee){
                                 Log.i("Date", "date or location is not exist");
@@ -84,9 +78,9 @@ class MyRepository extends ViewModel{
                         }
                     }
 
-                    new QueryAllAsyncTask(mDBDao, resp).execute();
                 }
 
+                new QueryAllAsyncTask(mDBDao, resp).execute();
             }
         });
 
@@ -132,8 +126,6 @@ class MyRepository extends ViewModel{
     public LiveData<FotoData> getFoto(String path) {
         return mDBDao.retrieveSelectFoto(path);
     }
-
-//    }
 
 
 
@@ -207,7 +199,7 @@ class MyRepository extends ViewModel{
         @Override
         protected List<FotoData> doInBackground(final Void... voids) {
             List<FotoData> p=new ArrayList<>();
-            p=mAsyncTaskDao.retrieveAllFoto();
+            p=mAsyncTaskDao.retrieveAllPaths();
             return p;
         }
         @Override

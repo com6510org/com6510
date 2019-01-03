@@ -30,27 +30,23 @@ public class MyViewModel extends AndroidViewModel {
         return fotoDataToDisplay;
     }
 
-    /**
-     * request by the UI to generate a new random number
-     */
+
     public void generateNewFoto(List<FotoData> list) {
         mRepository.generateNewFoto(list);
 
     }
 
-   /* public void generateNewFoto(String path,String date,String latitude,String longitude) {
-        mRepository.generateNewFoto(path,date,latitude,longitude);
-    }
-*/
+
 
 
     public void deleteAllElement(){
-        mRepository.deletAll();
+        mRepository.deleteAll();
     }
 
 
     public void getAllPhotos(AsyncResponse resp, List<String> myPicturePath)
     {
         mRepository.getAllPhotos(resp, myPicturePath);
+
     }
 }

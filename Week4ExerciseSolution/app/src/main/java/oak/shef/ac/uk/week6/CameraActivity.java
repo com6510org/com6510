@@ -16,7 +16,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -256,7 +255,7 @@ public class CameraActivity extends AppCompatActivity {
                 lat = mCurrentLocation.getLatitude();
                 lon = mCurrentLocation.getLongitude();
             }
-            newList.add(new FotoData("title Example", "Description example", path, date, lat, lon));
+            newList.add(new FotoData("Add a title", "Add a description", path, date, lat, lon));
             myViewModel.generateNewFoto(newList);
         } catch (Exception ee) {
             Log.i("Date", "date or location is not exist");
@@ -296,16 +295,14 @@ public class CameraActivity extends AppCompatActivity {
                     lon = mCurrentLocation.getLongitude();
                 }
                 Log.i("Date", " path: " + path + "  Date: " + date + "  latitude: " + lat + "  longitude: " + lon + " latitudeRef: " + latitudeRef + " longitudeRef: " + longitudeRef);
-                newList.add(new FotoData("title Example", "Description example", myPicturePath.get(i), date, lat, lon));
+                newList.add(new FotoData("Add a title", "Add a description", myPicturePath.get(i), date, lat, lon));
             } catch (Exception ee) {
                 Log.i("Date", "date or location is not exist");
             }
         }
         myPictureList.addAll(getFotoData(newList));
          myViewModel.generateNewFoto(newList);
-       /* for (int i = 0; i < myPicturePath.size(); i++) {
-            storeIntoRoom(myPicturePath.get(i));
-        }*/
+
 
     }
 
@@ -412,11 +409,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * add to the grid
-     *
-     * @param returnedPhotos
-     */
+
     private void onPhotosReturned(List<File> returnedPhotos) {
         final List<FotoData> addedPhotos = new ArrayList<>();
 
@@ -428,30 +421,14 @@ public class CameraActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable final FotoData newValue) {
                     if (newValue == null) {
-                        Log.i("TagQuery", "Not exist!!!!!!");
-                        //storeIntoRoom(finalPath);
+
                         storeIntoRoom(finalPath);
 
                         ExifInterface exif = null;
-                       /* try {
-                            exif = new ExifInterface(finalPath);
-                            String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
-                            String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-                            String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-                            double lat = score2dimensionalityLat(latitude);
-                            double lon = score2dimensionalityLon(longitude);
-                            Log.i("Date", " path: "+finalPath+"  Date: "+date+"  latitude: "+lat+"  longitude: "+lon);
-                            addedPhotos.add(new FotoData("add a title", "add a description", finalPath,date,latitude,longitude));
-
-
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }*/
 
 
                     } else {
-                        Log.i("TagQuery", "Already exist!!!!!!");
+
                     }
                 }
             });
@@ -461,16 +438,11 @@ public class CameraActivity extends AppCompatActivity {
         myPictureList.addAll(getImageElements(returnedPhotos));
         mAdapter.notifyDataSetChanged();
         mRecyclerView.scrollToPosition(returnedPhotos.size() - 1);
-        //myViewModel.generateNewFoto(addedPhotos);
+
 
     }
 
-    /**
-     * given a list of photos, it creates a list of myElements
-     *
-     * @param returnedPhotos
-     * @return
-     */
+//WHAT IS THIS METHOD FOR
     private List<ImageElement> getImageElements(List<File> returnedPhotos) {
         List<ImageElement> imageElementList = new ArrayList<>();
 
@@ -505,7 +477,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 Log.i("CheckPoint", myPictureList.size() + "  !11!  ");
                 Log.i("Date", " path: " + path + "  Date: " + date + "  latitude: " + lat + "  longitude: " + lon + " latitudeRef: " + latitudeRef + " longitudeRef: " + longitudeRef);
-                ImageElement element = new ImageElement(new FotoData("title Example", "Description example", path, date, lat, lon));
+                ImageElement element = new ImageElement(new FotoData("Add a title", "Add a description", path, date, lat, lon));
                 imageElementList.add(element);
             } catch (Exception ee) {
                 Log.i("Date", "date or location is not exist");
