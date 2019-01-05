@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -18,6 +19,12 @@ public interface MyDAO {
 
     @Delete
     void delete(FotoData fotoData);
+
+    @Update()
+    void update(FotoData fotoData);
+
+    @Update()
+    int update(FotoData... fotoData);
 
     // it selects a random element
     @Query("SELECT * FROM fotoData ORDER BY RANDOM() LIMIT 1")
@@ -63,4 +70,6 @@ public interface MyDAO {
 
     @Query("SELECT COUNT(*) FROM fotoData")
     int howManyElements();
+
+
 }

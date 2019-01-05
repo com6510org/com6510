@@ -14,9 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:text="title Example"
+        android:id="@+id/editTextTitle2"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:inputType="text"
+        android:textSize="20dp" />
+
     <TextView
         android:clickable="true"
         android:layout_marginTop="10dp"
@@ -27,9 +30,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:text="Description example"
+        android:id="@+id/editTextDescription2"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:inputType="text"
+        android:textSize="20dp" />
     <TextView
         android:clickable="true"
         android:layout_marginTop="10dp"

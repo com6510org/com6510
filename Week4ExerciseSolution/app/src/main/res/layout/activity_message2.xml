@@ -37,6 +37,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
-        android:src="@drawable/ic_show_photo_information_black_24dp" />
+        android:src="@drawable/ic_info_outline_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

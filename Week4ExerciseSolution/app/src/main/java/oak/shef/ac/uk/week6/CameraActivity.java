@@ -103,7 +103,7 @@ public class CameraActivity extends AppCompatActivity {
 
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
 
-        myViewModel.deleteAllElement();
+        //myViewModel.deleteAllElement();
 
 
 
