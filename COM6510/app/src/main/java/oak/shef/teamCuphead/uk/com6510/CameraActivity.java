@@ -99,7 +99,6 @@ public class CameraActivity extends AppCompatActivity {
 
 
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
-
         //myViewModel.deleteAllElement();
 
 
@@ -236,7 +235,7 @@ public class CameraActivity extends AppCompatActivity {
             String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
             double lat = score2dimensionalityLat(latitude);
             double lon = score2dimensionalityLon(longitude);
-            if (latitudeRef != null && longitudeRef != null && date != null) {
+            if (latitudeRef != null && longitudeRef != null) {
                 if (latitudeRef.equals("S")) {
                     Log.i("CheckPoint", myPictureList.size() + "  !9!  ");
                     lat = -lat;
@@ -246,12 +245,16 @@ public class CameraActivity extends AppCompatActivity {
                     lon = -lon;
                 }
             } else {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-                Date fotodate = new Date(System.currentTimeMillis());
-                date = simpleDateFormat.format(fotodate);
                 lat = mCurrentLocation.getLatitude();
                 lon = mCurrentLocation.getLongitude();
             }
+            if(date==null){
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                Date fotodate = new Date(System.currentTimeMillis());
+                date = simpleDateFormat.format(fotodate);
+            }
+
+            Log.i("CheckPoint", myPictureList.size() + "  !1!  ");
             newList.add(new FotoData("Add a title", "Add a description", path, date, lat, lon));
             myViewModel.generateNewFoto(newList);
         } catch (Exception ee) {
@@ -275,7 +278,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 double lat = score2dimensionalityLat(latitude);
                 double lon = score2dimensionalityLon(longitude);
-                if (latitudeRef != null && longitudeRef != null && date != null) {
+                if (latitudeRef != null && longitudeRef != null) {
                     if (latitudeRef.equals("S")) {
                         Log.i("CheckPoint", myPictureList.size() + "  !9!  ");
                         lat = -lat;
@@ -284,12 +287,12 @@ public class CameraActivity extends AppCompatActivity {
                         Log.i("CheckPoint", myPictureList.size() + "  !10!  ");
                         lon = -lon;
                     }
-                } else {
+                }
+
+                if(date==null){
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
                     Date fotodate = new Date(System.currentTimeMillis());
                     date = simpleDateFormat.format(fotodate);
-                    lat = mCurrentLocation.getLatitude();
-                    lon = mCurrentLocation.getLongitude();
                 }
                 Log.i("Date", " path: " + path + "  Date: " + date + "  latitude: " + lat + "  longitude: " + lon + " latitudeRef: " + latitudeRef + " longitudeRef: " + longitudeRef);
                 newList.add(new FotoData("Add a title", "Add a description", myPicturePath.get(i), date, lat, lon));
@@ -298,7 +301,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         }
         myPictureList.addAll(getFotoData(newList));
-         myViewModel.generateNewFoto(newList);
+        myViewModel.generateNewFoto(newList);
 
 
     }

@@ -78,8 +78,8 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
                         Bitmap bm=BitmapFactory.decodeFile(output.get(i).getPath());
                         int width = bm.getWidth();
                         int height = bm.getHeight();
-                        int newWidth =  80;
-                        int newHeight = 80;
+                        int newWidth = 120;
+                        int newHeight = 120;
                         float scaleWidth = ((float) newWidth) / width;
                         float scaleHeight = ((float) newHeight) / height;
                         Matrix matrix = new Matrix();
