@@ -1,0 +1,4 @@
+#Sat Jan 05 14:46:16 GMT 2019
+base.0=/Users/LokTar/Downloads/com6510-master-11/Week4ExerciseSolution/app/build/intermediates/transforms/dexMerger/debug/0
+path.0=classes.dex
+renamed.0=classes.dex
