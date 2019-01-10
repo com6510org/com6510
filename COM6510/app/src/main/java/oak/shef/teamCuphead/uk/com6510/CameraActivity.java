@@ -101,7 +101,7 @@ public class CameraActivity extends AppCompatActivity {
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
 
         //myViewModel.deleteAllElement();
-
+        checkPermissions(getApplicationContext());
 
 
 
@@ -111,19 +111,16 @@ public class CameraActivity extends AppCompatActivity {
                 // if  there is something in the list
                 if (!output.isEmpty()) {
                     for (int i = 0; i < output.size(); i++) {
-                        Log.i("Query", "out put size: " + output.size() + " out put path: " + output.get(i).getPath() + "");
-                        initdata.add(output.get(i));
+                          initdata.add(output.get(i));
                     }
                     myPictureList.addAll(getFotoData(initdata));
-                    Log.i("CheckPoint", myPictureList.size() + " !3! ");
-                    mAdapter = new MyAdapter(myPictureList);
+                     mAdapter = new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
 
                 }
                 //if the list is empty
                 else if (output.isEmpty()) {
                     initData();
-                    Log.i("CheckPoint", myPictureList.size() + "  !2!  ");
 
                     mAdapter = new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
@@ -134,7 +131,7 @@ public class CameraActivity extends AppCompatActivity {
         myViewModel.getAllPhotos(response, myPicturePath);
 
 
-        checkPermissions(getApplicationContext());
+
 
         initEasyImage();
 
@@ -238,12 +235,10 @@ public class CameraActivity extends AppCompatActivity {
             double lon = score2dimensionalityLon(longitude);
             if (latitudeRef != null && longitudeRef != null && date != null) {
                 if (latitudeRef.equals("S")) {
-                    Log.i("CheckPoint", myPictureList.size() + "  !9!  ");
-                    lat = -lat;
+                     lat = -lat;
                 }
                 if (longitudeRef.equals("W")) {
-                    Log.i("CheckPoint", myPictureList.size() + "  !10!  ");
-                    lon = -lon;
+                     lon = -lon;
                 }
             } else {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
@@ -277,12 +272,10 @@ public class CameraActivity extends AppCompatActivity {
                 double lon = score2dimensionalityLon(longitude);
                 if (latitudeRef != null && longitudeRef != null && date != null) {
                     if (latitudeRef.equals("S")) {
-                        Log.i("CheckPoint", myPictureList.size() + "  !9!  ");
-                        lat = -lat;
+                          lat = -lat;
                     }
                     if (longitudeRef.equals("W")) {
-                        Log.i("CheckPoint", myPictureList.size() + "  !10!  ");
-                        lon = -lon;
+                         lon = -lon;
                     }
                 } else {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
@@ -291,8 +284,7 @@ public class CameraActivity extends AppCompatActivity {
                     lat = mCurrentLocation.getLatitude();
                     lon = mCurrentLocation.getLongitude();
                 }
-                Log.i("Date", " path: " + path + "  Date: " + date + "  latitude: " + lat + "  longitude: " + lon + " latitudeRef: " + latitudeRef + " longitudeRef: " + longitudeRef);
-                newList.add(new FotoData("Add a title", "Add a description", myPicturePath.get(i), date, lat, lon));
+                 newList.add(new FotoData("Add a title", "Add a description", myPicturePath.get(i), date, lat, lon));
             } catch (Exception ee) {
                 Log.i("Date", "date or location is not exist");
             }
@@ -330,10 +322,12 @@ public class CameraActivity extends AppCompatActivity {
 
 
     private void checkPermissions(final Context context) {
+        Log.i("ENTROO1",  "A PEDIR PERMISOS");
         int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+       if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Log.i("ENTROO",  "A PEDIR PERMISOS");
                     android.support.v7.app.AlertDialog.Builder alertBuilder = new android.support.v7.app.AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
                     alertBuilder.setTitle("Permission necessary");
@@ -352,7 +346,7 @@ public class CameraActivity extends AppCompatActivity {
                 }
 
             }
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+           if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     android.support.v7.app.AlertDialog.Builder alertBuilder = new android.support.v7.app.AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
@@ -456,12 +450,10 @@ public class CameraActivity extends AppCompatActivity {
                 double lon = score2dimensionalityLon(longitude);
                 if (latitudeRef != null && longitudeRef != null && date != null) {
                     if (latitudeRef.equals("S")) {
-                        Log.i("CheckPoint", myPictureList.size() + "  !9!  ");
-                        lat = -lat;
+                         lat = -lat;
                     }
                     if (longitudeRef.equals("W")) {
-                        Log.i("CheckPoint", myPictureList.size() + "  !10!  ");
-                        lon = -lon;
+                          lon = -lon;
                     }
                 } else {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
@@ -472,8 +464,6 @@ public class CameraActivity extends AppCompatActivity {
                 }
 
 
-                Log.i("CheckPoint", myPictureList.size() + "  !11!  ");
-                Log.i("Date", " path: " + path + "  Date: " + date + "  latitude: " + lat + "  longitude: " + lon + " latitudeRef: " + latitudeRef + " longitudeRef: " + longitudeRef);
                 ImageElement element = new ImageElement(new FotoData("Add a title", "Add a description", path, date, lat, lon));
                 imageElementList.add(element);
             } catch (Exception ee) {
@@ -549,7 +539,7 @@ public class CameraActivity extends AppCompatActivity {
             super.onLocationResult(locationResult);
             mCurrentLocation = locationResult.getLastLocation();
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            Log.i("MAP", "new location " + mCurrentLocation.toString());
+
         }
     };
 
