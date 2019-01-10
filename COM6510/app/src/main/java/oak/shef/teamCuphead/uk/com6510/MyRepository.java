@@ -40,7 +40,10 @@ class MyRepository extends ViewModel{
                     List<String> allStrings= new ArrayList<>();
                     for( FotoData e: allPaths)
                     {
-                        allStrings.add(e.getPath());
+                        if(e.getFototype()==2.0){
+                            allStrings.add(e.getPath());
+                        }
+
                     }
                     int x=0;
                     for( String e:  new ArrayList<>(allStrings))
@@ -66,9 +69,22 @@ class MyRepository extends ViewModel{
                                 String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
                                 String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
                                 String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                                String latitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                                String longitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
                                 double lat =  score2dimensionalityLat(latitude);
                                 double lon = score2dimensionalityLon(longitude);
-                                new insertAsyncTask(mDBDao).execute(new FotoData("Add a title", "Add a description", path,date,lat,lon));
+                                if (latitudeRef != null && longitudeRef != null) {
+                                    if (latitudeRef.equals("S")) {
+                                        Log.i("CheckPoint",  "  !9!  ");
+                                        lat = -lat;
+                                    }
+                                    if (longitudeRef.equals("W")) {
+                                        Log.i("CheckPoint", "  !10!  ");
+                                        lon = -lon;
+                                    }
+                                }
+                                Log.i("Date", " path: " + path + "  Date: " + date + "  latitude: " + lat + "  longitude: " + lon + " latitudeRef: " + latitudeRef + " longitudeRef: " + longitudeRef);
+                                new insertAsyncTask(mDBDao).execute(new FotoData("Add a title", "Add a description", path,date,lat,lon,2.0));
                             }
                             catch(Exception ee){
                                 Log.i("Date", "date or location is not exist");
@@ -199,7 +215,7 @@ class MyRepository extends ViewModel{
         @Override
         protected List<FotoData> doInBackground(final Void... voids) {
             List<FotoData> p=new ArrayList<>();
-            p=mAsyncTaskDao.retrieveAllPaths();
+            p=mAsyncTaskDao.retrieveAllFoto();
             return p;
         }
         @Override

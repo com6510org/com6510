@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import oak.shef.teamCuphead.uk.com6510.database.AsyncResponsere;
 import oak.shef.teamCuphead.uk.com6510.database.FotoData;
 import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
 import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
@@ -57,6 +58,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
     }
     private MyDAO mDBDao;
     private FotoData fd;
+    String path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -123,6 +125,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                     textViewDate.setText(element.fotodata.getDate());
                     Latitude = (element.fotodata.getLatitude());
                     Longitude = (element.fotodata.getLongitude());
+                    path=element.fotodata.getPath();
                     Log.i("CheckPoint"," !6! "+"Latitude"+Latitude.toString()+ "Longitude:"+Longitude.toString());
                 }
             }
@@ -174,32 +177,53 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 textViewDesc.setText(element.fotodata.getDescription());
                 textViewDesc.setVisibility(View.VISIBLE);
                 buttonSave.setVisibility(View.INVISIBLE);
+                RetriveFotodataWithPathAsyncTask retriveFotodataWithPathAsyncTask=new RetriveFotodataWithPathAsyncTask(mDBDao,new AsyncResponsere(){
+                    public void processFinish(FotoData output) {
+                        if(output!=null){
+
+
+                            output.setTitle(textEditTitle.getText().toString());
+                            Log.i("CheckPoint",output.toString()+"  !2!  ");
+                            output.setDescription(textEditDesc.getText().toString());
+                            new UpdateAsyncTask(mDBDao).execute(output);
+
+                        }
+                        else if(output==null){
+                            Log.i("CheckPoint","we dont have this foto  !2!  ");
+                        }
+
+                    }
+                });
+                retriveFotodataWithPathAsyncTask.execute(path);
+                Intent intent = new Intent(getBaseContext(), CameraActivity.class);
+                intent.putExtra("bundle", b);
+                startActivity(intent);
             }
         });
 
-//
-//        FloatingActionButton fabShowInformation = (FloatingActionButton) findViewById(R.id.fab_show_information);
-//        fabShowInformation.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new DetailInfo(getActivity());
-//        }
-//        });
+
 
     }
-//
-//    private View.OnClickListener listener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()){
-//                case R.id.buttonSave:
 
-//                    new UpdateAsyncTask(mDBDao).execute(element);
-//                    break;
-//            }
-//        }
-//    };
+    public class RetriveFotodataWithPathAsyncTask extends AsyncTask<String, Void, FotoData> {
+        private MyDAO mAsyncTaskDao;
+        public AsyncResponsere delegate=null;
+        RetriveFotodataWithPathAsyncTask(MyDAO dao,AsyncResponsere asyncResponsere) {
+            mAsyncTaskDao = dao;
+            delegate = asyncResponsere;
+        }
 
+        @Override
+        protected FotoData doInBackground(final String... fotopath) {
+
+            String path=fotopath[0];
+            FotoData fd= mAsyncTaskDao.retrieveSelectFotoPath(path);
+            return fd;
+        }
+        protected void onPostExecute(FotoData result) {
+            delegate.processFinish(result);
+        }
+    }
 
 
     private static class UpdateAsyncTask extends AsyncTask<FotoData, Void, Void> {
@@ -253,35 +277,6 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         setContentView(R.layout.activity_info);
     }
 
-
-     /*
-        if(mapFragment != null) {
-            Log.d("-------------------", "space no null");
-            FragmentManager fragmentManager = getFragmentManager();
-            if (fragmentManager != null && !fragmentManager.isDestroyed()) {
-                final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                if (fragmentTransaction != null) {
-                    fragmentTransaction.remove(mapFragment).commit();
-                }
-            }
-        }
-
-
-    }
-        */
-
-/*
-
-    @Override
-    public void onDestroyView() {
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        if(mapFragment != null){
-            getFragmentManager().beginTransaction().remove(mapFragment).commit();
-        }
-        super.onDestroyView();
-    }
-
-*/
 
 
 

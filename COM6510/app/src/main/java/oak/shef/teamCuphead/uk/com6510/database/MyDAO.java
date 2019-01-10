@@ -33,8 +33,8 @@ public interface MyDAO {
     @Query("SELECT * FROM fotoData")
     List<FotoData> retrieveAllFoto();
 
-    @Query("SELECT id, path FROM fotoData")
-    List<FotoData> retrieveAllPaths();
+    @Query("SELECT * FROM fotoData WHERE path= :fotopath LIMIT 1")
+    FotoData retrieveSelectFotoPath(String fotopath);
 
     @Query("SELECT * FROM fotoData WHERE path= :fotopath LIMIT 1")
     LiveData<FotoData> retrieveSelectFoto(String fotopath);
