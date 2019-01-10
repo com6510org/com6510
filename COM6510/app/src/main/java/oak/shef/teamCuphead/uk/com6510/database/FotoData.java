@@ -3,8 +3,10 @@ package oak.shef.teamCuphead.uk.com6510.database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.google.maps.android.clustering.ClusterItem;
+
 @Entity()
-public class FotoData {
+public class FotoData{
     @PrimaryKey(autoGenerate = true)
     @android.support.annotation.NonNull
     private int id=0;
@@ -14,16 +16,19 @@ public class FotoData {
     private String date;
     private Double latitude;
     private Double longitude;
+    //easyimage photo :1 gallery photo :2
+    private Double fototype;
 
 
 
-    public FotoData(String title, String description, String path, String date,Double latitude,Double longitude) {
+    public FotoData(String title, String description, String path, String date,Double latitude,Double longitude,Double fototype) {
         this.title= title;
         this.description= description;
         this.path= path;
         this.date=date;
         this.latitude=latitude;
         this.longitude=longitude;
+        this.fototype=fototype;
     }
 
     @android.support.annotation.NonNull
@@ -83,5 +88,23 @@ public class FotoData {
         this.longitude= longitude;
     }
 
+    public Double getFototype()
+    {
+        return fototype;
+    }
+    public void setFototype(Double fototype) {
+        this.fototype= fototype;
+    }
+
+    public String toString(){
+        return "Fotadata: "+
+                "id: "+id+
+                " title:"+title+
+                " des: "+description+
+                " path: "+path+
+                " date: "+date+
+                " latitude: "+latitude+
+                " longitude:"+longitude;
+    }
 
 }

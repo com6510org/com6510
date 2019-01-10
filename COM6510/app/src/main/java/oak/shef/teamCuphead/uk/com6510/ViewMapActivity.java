@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +16,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -26,19 +31,27 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.ui.IconGenerator;
+
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import oak.shef.teamCuphead.uk.com6510.database.Foto;
 import oak.shef.teamCuphead.uk.com6510.database.FotoData;
 import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
 import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
 
-public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallback,ClusterManager.OnClusterClickListener<Foto>, ClusterManager.OnClusterInfoWindowClickListener<Foto>, ClusterManager.OnClusterItemClickListener<Foto>, ClusterManager.OnClusterItemInfoWindowClickListener<Foto>{
 
     private MyDAO mDBDao;
     private MarkerOptions mMarkOption;
@@ -50,7 +63,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
     private static final int ACCESS_FINE_LOCATION = 123;
     private Location mCurrentLocation;
-
+    private ClusterManager<Foto> mClusterManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,46 +83,124 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
             }
         });
 
+    }
+
+    private class PersonRenderer extends DefaultClusterRenderer<Foto> {
+        private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
+        private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
+        private final ImageView mImageView;
+        private final ImageView mClusterImageView;
+        private final int mDimension;
+
+        public PersonRenderer() {
+            super(getApplicationContext(),mMap , mClusterManager);
+
+            View multiProfile = getLayoutInflater().inflate(R.layout.multi_profile, null);
+            mClusterIconGenerator.setContentView(multiProfile);
+            mClusterImageView = (ImageView) multiProfile.findViewById(R.id.image);
+
+            mImageView = new ImageView(getApplicationContext());
+            mDimension = (int) getResources().getDimension(R.dimen.custom_profile_image);
+
+            mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimension, mDimension));
+            int padding = (int) getResources().getDimension(R.dimen.custom_profile_padding);
+            mImageView.setPadding(padding, padding, padding, padding);
+            mIconGenerator.setContentView(mImageView);
+        }
+        protected void onBeforeClusterItemRendered(Foto foto, MarkerOptions markerOptions) {
+            // Draw a single person.
+            // Set the info window to show their name.
+            mImageView.setImageBitmap(foto.profilePhoto);
+            Bitmap icon = mIconGenerator.makeIcon();
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(foto.title).snippet(foto.description);
+        }
+        protected void onBeforeClusterRendered(Cluster<Foto> cluster, MarkerOptions markerOptions) {
+            // Draw multiple people.
+            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+            List<Drawable> profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
+            int width = mDimension;
+            int height = mDimension;
+
+            for (Foto foto : cluster.getItems()) {
+                // Draw 4 at most.
+                if (profilePhotos.size() == 4) break;
+                Drawable d = new BitmapDrawable(foto.profilePhoto);
+                d.setBounds(0, 0, width, height);
+                profilePhotos.add(d);
+            }
+            MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
+            multiDrawable.setBounds(0, 0, width, height);
+
+            mClusterImageView.setImageDrawable(multiDrawable);
+            Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster cluster) {
+            // Always render clusters.
+            return cluster.getSize() > 1;
+        }
+    }
+
+    private void addItems(){
         QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
             public void processFinish(List<FotoData> output) {
                 Log.i("CheckPoint",output.size()+" !1! ");
                 if (!output.isEmpty()){
                     for(int i=0;i<output.size();i++){
-                        Bitmap bm=BitmapFactory.decodeFile(output.get(i).getPath());
-                        int width = bm.getWidth();
-                        int height = bm.getHeight();
-                        int newWidth = 120;
-                        int newHeight = 120;
-                        float scaleWidth = ((float) newWidth) / width;
-                        float scaleHeight = ((float) newHeight) / height;
-                        Matrix matrix = new Matrix();
-                        matrix.postScale(scaleWidth, scaleHeight);
-                        Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix,true);
-                        mMarkOption = new MarkerOptions();
-                        mMarkOption.icon(BitmapDescriptorFactory.fromBitmap(newbm));
-                        mMarkOption.position(new LatLng(output.get(i).getLatitude(), output.get(i).getLongitude()));
-                        mMarkOption.title(output.get(i).getTitle());
-                        mMarkOption.snippet(output.get(i).getDescription());
-                        Marker mMarker = mMap.addMarker(mMarkOption);
-                        mMarker.showInfoWindow();
-                        String path=output.get(i).getPath();
-
+                        Log.i("CheckPoint",output.get(i).toString()+" !1! ");
+                        mClusterManager.addItem(new Foto(new LatLng(output.get(i).getLatitude(),output.get(i).getLongitude()),output.get(i).getTitle(),BitmapFactory.decodeFile(output.get(i).getPath()),output.get(i).getDescription()));
                     }
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(output.get(0).getLatitude(),output.get(0).getLongitude()), 14.0f));
                 }
                 else if(output.isEmpty()){
 
                 }
+
+
             }
         });
         queryAllAsyncTask.execute();
     }
 
-
-
-
-
     private void setUpMap() {
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<Foto> cluster) {
+        Toast.makeText(this, cluster.getSize() + " (including " + ")", Toast.LENGTH_SHORT).show();
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (ClusterItem item : cluster.getItems()) {
+            builder.include(item.getPosition());
+        }
+        // Get the LatLngBounds
+        final LatLngBounds bounds = builder.build();
+
+        // Animate camera to the bounds
+        try {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onClusterInfoWindowClick(Cluster<Foto> cluster) {
+
+    }
+
+    @Override
+    public boolean onClusterItemClick(Foto foto) {
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(Foto foto) {
+
     }
 
     public class QueryAllAsyncTask extends AsyncTask<Void, Void, List<FotoData>> {
@@ -218,11 +309,22 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mClusterManager = new ClusterManager<Foto>(this, mMap);
+        mClusterManager.setRenderer(new PersonRenderer());
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(mClusterManager);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        addItems();
+        mClusterManager.cluster();
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-        marker=mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14.0f));
+        marker=mMap.addMarker(new MarkerOptions().position(sydney).title("Where you are"));
+
 
     }
 
