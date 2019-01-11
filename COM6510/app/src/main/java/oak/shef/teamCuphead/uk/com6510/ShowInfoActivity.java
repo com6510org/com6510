@@ -254,12 +254,4 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    @Override
-    public void onConfigurationChanged (Configuration newConfig) {
-
-        super.onConfigurationChanged(newConfig);
-
-        setContentView(R.layout.activity_info);
-    }
-
 }

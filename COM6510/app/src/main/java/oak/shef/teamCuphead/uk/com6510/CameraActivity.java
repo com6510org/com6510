@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -34,6 +35,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 
 import java.io.File;
 
@@ -75,6 +80,7 @@ public class CameraActivity extends AppCompatActivity {
     private Activity activity;
     private MyViewModel myViewModel;
     private static final int ACCESS_FINE_LOCATION = 123;
+    private int numberOfColumns;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -95,7 +101,14 @@ public class CameraActivity extends AppCompatActivity {
         activity = this;
         mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
-        int numberOfColumns = 3;
+
+
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            numberOfColumns = 3;
+        } else {
+            numberOfColumns = 4;
+        }
+
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
 
 
@@ -586,13 +599,6 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onConfigurationChanged (Configuration newConfig) {
-
-        super.onConfigurationChanged(newConfig);
-
-        setContentView(R.layout.activity_camera);
-    }
 
 
 }
