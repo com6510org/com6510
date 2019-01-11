@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
 public class ShowImageActivity extends AppCompatActivity {
     private Activity activity;
+    private FloatingActionButton fabShowInformation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +30,7 @@ public class ShowImageActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         View decorView = getWindow().getDecorView();
         int option = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(option);
         actionBar.hide();
@@ -63,7 +66,9 @@ public class ShowImageActivity extends AppCompatActivity {
 
         }
 
-        FloatingActionButton fabShowInformation = (FloatingActionButton) findViewById(R.id.fab_show_information);
+
+        fabShowInformation = (FloatingActionButton) findViewById(R.id.fab_show_information);
+        fabShowInformation.setVisibility(View.INVISIBLE);
         fabShowInformation.setOnClickListener(new View.OnClickListener() {
             //View popupView = getLayoutInflater().inflate(R.layout.activity_popupwindow, null);
             @Override
@@ -90,8 +95,24 @@ public class ShowImageActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            fabShowInformation.setVisibility(View.INVISIBLE);
         }
     }
+
+    //show floating button and navigation while screen being touched
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        fabShowInformation.setVisibility(View.VISIBLE);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        fabShowInformation.setVisibility(View.VISIBLE);
+        return false;
+    }
+
 
 }
 

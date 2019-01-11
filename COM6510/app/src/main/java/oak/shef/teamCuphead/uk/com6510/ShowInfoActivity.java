@@ -48,7 +48,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
     private Activity activity;
     private GoogleMap mMap;
     private Button buttonSave;
-    private TextView textViewTitle, textEditTitle, textViewDesc, textEditDesc, textViewDate, FocusField;
+    private TextView textViewTitle, textEditTitle, textViewDesc, textEditDesc, textViewDate;
     private Double Latitude, Longitude;
     private SupportMapFragment mapFragment;
     private ImageElement element;
@@ -73,14 +73,12 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         //make it full screen
         ActionBar actionBar = getSupportActionBar();
         View decorView = getWindow().getDecorView();
-        int option = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        int option = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(option);
         actionBar.hide();
 
         buttonSave = (Button) findViewById(R.id.buttonSave);
         buttonSave.setVisibility(View.INVISIBLE);
-        FocusField= (TextView) findViewById(R.id.textView8);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -150,15 +148,6 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
-
-        FocusField.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ShowImageActivity.class);
-                intent.putExtra("bundle", b);
-                startActivity(intent);
-            }
-        });
 
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -252,7 +241,6 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fotoposition, 14.0f));
     }
 
-    //not showing navigation and action bar while screen being touched
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -260,14 +248,11 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
-
 
     @Override
     public void onConfigurationChanged (Configuration newConfig) {
@@ -276,8 +261,5 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
         setContentView(R.layout.activity_info);
     }
-
-
-
 
 }

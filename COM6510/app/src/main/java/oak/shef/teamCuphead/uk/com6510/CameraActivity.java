@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -582,6 +583,14 @@ public class CameraActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    @Override
+    public void onConfigurationChanged (Configuration newConfig) {
+
+        super.onConfigurationChanged(newConfig);
+
+        setContentView(R.layout.activity_camera);
     }
 
 
