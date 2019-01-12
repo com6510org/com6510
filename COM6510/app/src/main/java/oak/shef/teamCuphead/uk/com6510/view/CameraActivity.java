@@ -9,6 +9,7 @@ package oak.shef.teamCuphead.uk.com6510.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -54,6 +55,7 @@ public class CameraActivity extends AppCompatActivity {
     private List<FotoData> initdatalist = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
     private RecyclerView mRecyclerView;
+    private int numberOfColumns;
     private List<String> myPicturePath = new ArrayList<>();
     private Activity activity;
     private Context context;
@@ -74,7 +76,11 @@ public class CameraActivity extends AppCompatActivity {
         activity = this;
         mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
-        int numberOfColumns = 3;
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            numberOfColumns = 3;
+        } else {
+            numberOfColumns = 4;
+        }
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
         permissionCheck=new PermissionCheck();
