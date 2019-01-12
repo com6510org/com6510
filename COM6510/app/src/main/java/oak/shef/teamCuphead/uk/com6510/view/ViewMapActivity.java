@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.List;
 
 import oak.shef.teamCuphead.uk.com6510.APICode.MultiDrawable;
+import oak.shef.teamCuphead.uk.com6510.CommonMethod.LocationUpdataFunction;
 import oak.shef.teamCuphead.uk.com6510.R;
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
 import oak.shef.teamCuphead.uk.com6510.model.Foto;
@@ -73,6 +74,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     private  Context context;
     private Activity activity;
     private Marker marker;
+    private LocationUpdataFunction locationUpdataFunction=new LocationUpdataFunction();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,17 +82,17 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         setUpMap();
         context=this;
         activity=this;
-        myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
         MyRoomDatabase db = MyRoomDatabase.getDatabase(this);
         mDBDao = db.myDao();
-        myViewModel.startLocationUpdates(context,activity);
+        locationUpdataFunction.startLocationUpdates(context,activity);
+        Log.i("Date", "date or location is not exist");
         FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.myLocationButton);
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
          //       startLocationUpdates();
-                marker.setPosition(new LatLng(myViewModel.returnMyLocation().getLatitude(),myViewModel.returnMyLocation().getLongitude()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 14.0f));
+                marker.setPosition(new LatLng(locationUpdataFunction.ReturnMyCurrentLocation().getLatitude(),locationUpdataFunction.ReturnMyCurrentLocation().getLongitude()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationUpdataFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdataFunction.ReturnMyCurrentLocation().getLongitude()), 14.0f));
 
             }
         });

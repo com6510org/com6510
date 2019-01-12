@@ -20,13 +20,14 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC_syCcy5a6DuqTXrBqG8VRz-uf8FzZiWs" />
+            android:value="AIzaSyAg6UipHz4ONF4BOx0T_tbnnsY2Q0A4iyg" />
 
 
 
         <activity
             android:name="oak.shef.teamCuphead.uk.com6510.view.CameraActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -37,9 +38,7 @@
         </activity>
         <activity android:name="oak.shef.teamCuphead.uk.com6510.ShowImageActivity" />
         <activity
-            android:name="oak.shef.teamCuphead.uk.com6510.ShowInfoActivity"
-            android:screenOrientation="sensor"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
+            android:name="oak.shef.teamCuphead.uk.com6510.ShowInfoActivity" />
         <activity android:name="oak.shef.teamCuphead.uk.com6510.SearchActivity" />
         <activity android:name="oak.shef.teamCuphead.uk.com6510.ShowSearchActivity" />
         <activity android:name="oak.shef.teamCuphead.uk.com6510.view.ViewMapActivity"></activity>

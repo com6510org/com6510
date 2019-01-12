@@ -61,7 +61,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ShowImageActivity.class);
+                    intent.putExtra("position", position);
                     context.startActivity(intent);
+
                 }
             });
         }
