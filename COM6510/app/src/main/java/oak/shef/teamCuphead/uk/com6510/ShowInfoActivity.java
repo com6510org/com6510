@@ -142,8 +142,6 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 String desc= textEditDesc.getText().toString();
                 fd.setTitle(title);
                 fd.setDescription(desc);
-                Log.i("CheckPoint"," !4! "+ fd.toString());
-                new UpdateAsyncTask(mDBDao).execute(fd);
                 textEditTitle.setVisibility(View.INVISIBLE);
                 textEditDesc.setVisibility(View.INVISIBLE);
                 textViewTitle.setText(element.getTitle());

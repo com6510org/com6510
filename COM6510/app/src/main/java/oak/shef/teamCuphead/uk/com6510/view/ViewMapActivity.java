@@ -245,7 +245,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        myViewModel.startLocationUpdates(context,activity);
+        locationUpdataFunction.startLocationUpdates(context,activity);
     }
 
     private String mLastUpdateTime;
