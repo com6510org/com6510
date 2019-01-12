@@ -98,7 +98,7 @@ public class CameraActivity extends AppCompatActivity {
                     myPicturePath=myViewModel.getImagesPath(activity);
 
                     myPictureList.addAll(myViewModel.initData(myPicturePath));
-
+                    myViewModel.generateNewFoto(myViewModel.initData(myPicturePath));
                     mAdapter = new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
                 }
