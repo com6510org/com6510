@@ -1,4 +1,4 @@
-package oak.shef.teamCuphead.uk.com6510;
+package oak.shef.teamCuphead.uk.com6510.view;
 
 
 import android.app.DatePickerDialog;
@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import java.util.Calendar;
+
+import oak.shef.teamCuphead.uk.com6510.R;
 
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {

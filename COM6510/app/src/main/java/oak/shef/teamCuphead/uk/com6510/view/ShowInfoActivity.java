@@ -2,12 +2,11 @@
  * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package oak.shef.teamCuphead.uk.com6510;
+package oak.shef.teamCuphead.uk.com6510.view;
 
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -21,12 +20,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import oak.shef.teamCuphead.uk.com6510.R;
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponsere;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
 import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
-import oak.shef.teamCuphead.uk.com6510.view.CameraActivity;
-import oak.shef.teamCuphead.uk.com6510.view.MyAdapter;
+
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +30,6 @@ import java.util.List;
 
 import oak.shef.teamCuphead.uk.com6510.viewmodel.MyViewModel;
 import oak.shef.teamCuphead.uk.com6510.R;
-import oak.shef.teamCuphead.uk.com6510.SearchActivity;
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import oak.shef.teamCuphead.uk.com6510.CommonMethod.ChangeFiletoFotodata;
@@ -98,7 +96,7 @@ public class CameraActivity extends AppCompatActivity {
                     myPicturePath=myViewModel.getImagesPath(activity);
 
                     myPictureList.addAll(myViewModel.initData(myPicturePath));
-
+                    myViewModel.generateNewFoto(myViewModel.initData(myPicturePath));
                     mAdapter = new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
                 }

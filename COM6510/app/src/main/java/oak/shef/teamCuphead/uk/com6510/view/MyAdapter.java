@@ -18,7 +18,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import oak.shef.teamCuphead.uk.com6510.R;
-import oak.shef.teamCuphead.uk.com6510.ShowImageActivity;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {

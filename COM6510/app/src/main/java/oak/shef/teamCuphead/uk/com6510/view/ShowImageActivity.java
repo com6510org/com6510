@@ -2,7 +2,7 @@
  * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package oak.shef.teamCuphead.uk.com6510;
+package oak.shef.teamCuphead.uk.com6510.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,8 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import oak.shef.teamCuphead.uk.com6510.R;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
-import oak.shef.teamCuphead.uk.com6510.view.MyAdapter;
 
 public class ShowImageActivity extends AppCompatActivity {
     private Activity activity;
@@ -47,10 +47,11 @@ public class ShowImageActivity extends AppCompatActivity {
         int position=-1;
         if(b != null) {
             position = b.getInt("position");
-            Log.i("Date", position+"date or location is not exist");
+
             if (position!=-1){
                 ImageView imageView = (ImageView) findViewById(R.id.image);
                 FotoData element= MyAdapter.getItems().get(position);
+                Log.i("Date", element.toString()+"date or location is not exist");
 
                 if (element!=null) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(element.getPath());

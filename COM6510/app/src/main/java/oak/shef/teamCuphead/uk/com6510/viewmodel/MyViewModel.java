@@ -58,6 +58,12 @@ public class MyViewModel extends AndroidViewModel {
         mRepository.getAllPhotos(resp, myPicturePath);
 
     }
+    public void searchIt(String title, String desc, String date, AsyncResponse resp)
+    {
+        mRepository.searchAll(title,  desc,  date, resp);
+
+    }
+
     public void initFunction(Context context){
         initFunction.initEasyImage(context);
     }

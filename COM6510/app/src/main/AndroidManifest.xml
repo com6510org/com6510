@@ -36,11 +36,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="oak.shef.teamCuphead.uk.com6510.ShowImageActivity" />
+        <activity android:name="oak.shef.teamCuphead.uk.com6510.view.ShowImageActivity" />
         <activity
-            android:name="oak.shef.teamCuphead.uk.com6510.ShowInfoActivity" />
-        <activity android:name="oak.shef.teamCuphead.uk.com6510.SearchActivity" />
-        <activity android:name="oak.shef.teamCuphead.uk.com6510.ShowSearchActivity" />
+            android:name="oak.shef.teamCuphead.uk.com6510.view.ShowInfoActivity" />
+        <activity android:name="oak.shef.teamCuphead.uk.com6510.view.SearchActivity" />
+        <activity android:name="oak.shef.teamCuphead.uk.com6510.view.ShowSearchActivity" />
         <activity android:name="oak.shef.teamCuphead.uk.com6510.view.ViewMapActivity"></activity>
     </application>
 

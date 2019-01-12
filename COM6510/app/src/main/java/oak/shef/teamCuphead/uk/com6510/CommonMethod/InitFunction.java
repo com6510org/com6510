@@ -1,7 +1,7 @@
 package oak.shef.teamCuphead.uk.com6510.CommonMethod;
 
 import android.app.Activity;
-import android.app.Application;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.media.ExifInterface;

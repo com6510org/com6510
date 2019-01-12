@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import oak.shef.teamCuphead.uk.com6510.CommonMethod.InitFunction;
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
@@ -18,7 +19,7 @@ import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
 
 class MyRepository extends ViewModel{
     private final MyDAO mDBDao;
-
+    private InitFunction initFunction=new InitFunction();
     public MyRepository(Application application) {
         MyRoomDatabase db = MyRoomDatabase.getDatabase(application);
         mDBDao = db.myDao();
@@ -30,7 +31,7 @@ class MyRepository extends ViewModel{
     public void deleteAll(){
         new deleteAsyncTask(mDBDao).execute();
     }
-
+    public void searchAll(String title, String desc, String date, AsyncResponse resp){ new searchAllAsyncTask(title, desc, date, mDBDao,  resp).execute();}
     public void getAllPhotos(final AsyncResponse resp, final List<String> myPicturePath)
     {
         selectAllPathAsyncTask selectAll=new selectAllPathAsyncTask(mDBDao,new AsyncResponse(){
@@ -72,8 +73,8 @@ class MyRepository extends ViewModel{
                                 String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
                                 String latitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
                                 String longitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-                                double lat =  score2dimensionalityLat(latitude);
-                                double lon = score2dimensionalityLon(longitude);
+                                double lat =  initFunction.score2dimensionality(latitude);
+                                double lon = initFunction.score2dimensionality(longitude);
                                 if (latitudeRef != null && longitudeRef != null) {
                                     if (latitudeRef.equals("S")) {
                                         lat = -lat;
@@ -105,37 +106,7 @@ class MyRepository extends ViewModel{
     }
 
 
-    private double score2dimensionalityLat(String string) {
-        double dimensionality = 0.0;
-        if (null == string) {
-            return dimensionality;
-        }
 
-        String[] split = string.split(",");
-        for (int i = 0; i < split.length; i++) {
-
-            String[] s = split[i].split("/");
-            double v = Double.parseDouble(s[0]) / Double.parseDouble(s[1]);
-            dimensionality = dimensionality + v / Math.pow(60, i);
-        }
-        return dimensionality;
-    }
-
-    private double score2dimensionalityLon(String string) {
-        double dimensionality = 0.0;
-        if (null == string) {
-            return dimensionality;
-        }
-
-        String[] split = string.split(",");
-        for (int i = 0; i < split.length; i++) {
-
-            String[] s = split[i].split("/");
-            double v = Double.parseDouble(s[0]) / Double.parseDouble(s[1]);
-            dimensionality = dimensionality + v / Math.pow(60, i);
-        }
-        return dimensionality;
-    }
 
     public LiveData<FotoData> getFoto(String path) {
         return mDBDao.retrieveSelectFoto(path);
@@ -240,5 +211,65 @@ class MyRepository extends ViewModel{
             delegate.processFinish(result);
         }
     }
+    public class searchAllAsyncTask extends AsyncTask<Void, Void, List<FotoData>> {
+        private MyDAO mAsyncTaskDao;
+        public AsyncResponse delegate=null;
+        private String title=null;
+        private String desc=null;
+        private String date=null;
+        searchAllAsyncTask(String t, String d, String da, MyDAO dao,AsyncResponse asyncResponse) {
+            mAsyncTaskDao = dao;
+            delegate = asyncResponse;
+            title=t;
+            desc=d;
+            date=da;
+        }
+        @Override
+        protected List<FotoData> doInBackground(final Void... voids) {
+            // you may want to uncomment this to check if photo path have been inserted
+            List<FotoData> fd=new ArrayList<>();
+
+
+            if (title.isEmpty() && desc.isEmpty() && !date.isEmpty() )
+            {
+                fd=mAsyncTaskDao.SearchFotosByDate( date);
+            }
+            else if(!title.isEmpty() && desc.isEmpty() && date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByTitle( title);
+            }
+            else if(title.isEmpty() && !desc.isEmpty() && date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByDescription( desc);
+            }
+            else if(!title.isEmpty() && !desc.isEmpty() && date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByDescTitle( desc, title);
+            }
+            else if(title.isEmpty() && !desc.isEmpty() && !date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByDescDate( desc, date);
+            }
+            else if(!title.isEmpty() && desc.isEmpty() && !date.isEmpty())
+            {
+                fd=mAsyncTaskDao.SearchFotosByTitleDate( title, date);
+            }
+            else
+            {
+                fd=mAsyncTaskDao.SearchFotos(title, desc, date);
+
+            }
+
+
+            return fd;
+        }
+        @Override
+        protected void onPostExecute(List<FotoData> result) {
+            delegate.processFinish(result);
+        }
+    }
+
+
+
 
 }
