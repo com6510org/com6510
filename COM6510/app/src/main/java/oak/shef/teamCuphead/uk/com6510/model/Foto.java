@@ -1,4 +1,4 @@
-package oak.shef.teamCuphead.uk.com6510.database;
+package oak.shef.teamCuphead.uk.com6510.model;
 
 import android.graphics.Bitmap;
 

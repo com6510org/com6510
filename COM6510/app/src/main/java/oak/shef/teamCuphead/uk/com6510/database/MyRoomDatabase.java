@@ -5,6 +5,8 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import oak.shef.teamCuphead.uk.com6510.model.FotoData;
+
 @android.arch.persistence.room.Database(entities = {FotoData.class}, version = 2, exportSchema = false)
 public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract MyDAO myDao();

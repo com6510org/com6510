@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="oak.shef.teamCuphead.uk.com6510.CameraActivity">
+    tools:context="oak.shef.teamCuphead.uk.com6510.view.CameraActivity">
 
     <TextView
         android:id="@+id/textMessage"

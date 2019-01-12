@@ -14,8 +14,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
+
+import oak.shef.teamCuphead.uk.com6510.model.FotoData;
+import oak.shef.teamCuphead.uk.com6510.view.MyAdapter;
 
 public class ShowImageActivity extends AppCompatActivity {
     private Activity activity;
@@ -43,20 +45,10 @@ public class ShowImageActivity extends AppCompatActivity {
             position = b.getInt("position");
             if (position!=-1){
                 ImageView imageView = (ImageView) findViewById(R.id.image);
-                ImageElement element= MyAdapter.getItems().get(position);
-                if (element.image!=-1) {
-                    imageView.setImageResource(element.image);
-                } else if (element.file!=null) {
-                    Bitmap myBitmap = BitmapFactory.decodeFile(element.file.getAbsolutePath());
-                    //print
-                    imageView.setImageBitmap(myBitmap);
-                }
-                else if (element.path!=null) {
-                    Bitmap myBitmap = BitmapFactory.decodeFile(element.path);
-                    imageView.setImageBitmap(myBitmap);
-                }
-                else if (element.fotodata!=null) {
-                    Bitmap myBitmap = BitmapFactory.decodeFile(element.fotodata.getPath());
+                FotoData element= MyAdapter.getItems().get(position);
+
+                if (element!=null) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(element.getPath());
                     imageView.setImageBitmap(myBitmap);
                 }
             }

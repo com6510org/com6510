@@ -2,7 +2,7 @@
  * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package oak.shef.teamCuphead.uk.com6510;
+package oak.shef.teamCuphead.uk.com6510.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,15 +17,19 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import oak.shef.teamCuphead.uk.com6510.R;
+import oak.shef.teamCuphead.uk.com6510.ShowImageActivity;
+import oak.shef.teamCuphead.uk.com6510.model.FotoData;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     static private Context context;
-    private static List<ImageElement> items;
+    private static List<FotoData> items;
 
-    public MyAdapter(List<ImageElement> items) {
+    public MyAdapter(List<FotoData> items) {
         this.items = items;
     }
 
-    public MyAdapter(Context cont, List<ImageElement> items) {
+    public MyAdapter(Context cont, List<FotoData> items) {
         super();
         this.items = items;
         context = cont;
@@ -47,27 +51,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
         if (holder!=null && items.get(position)!=null) {
-            if (items.get(position).image!=-1) {
-                holder.imageView.setImageResource(items.get(position).image);
-            } else if (items.get(position).file!=null){
-                Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).file.getAbsolutePath());
+            if (items.get(position)!=null){
+                Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).getPath());
                 holder.imageView.setImageBitmap(myBitmap);
-            }
-            else if (items.get(position).path!=null){
-                Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).path);
-                holder.imageView.setImageBitmap(myBitmap);
-            }
-            else if (items.get(position).fotodata!=null){
-                Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).fotodata.getPath());
-                holder.imageView.setImageBitmap(myBitmap);
-                holder.textView.setText(items.get(position).fotodata.getTitle());
-                holder.textViewDesc.setText(items.get(position).fotodata.getDescription());
+                holder.textView.setText(items.get(position).getTitle());
+                holder.textViewDesc.setText(items.get(position).getDescription());
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ShowImageActivity.class);
-                    intent.putExtra("position", position);
                     context.startActivity(intent);
                 }
             });
@@ -75,11 +68,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         //animate(holder);
     }
 
-
-    // convenience method for getting data at click position
-    ImageElement getItem(int id) {
-        return items.get(id);
-    }
 
     @Override
     public int getItemCount() {
@@ -100,11 +88,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
     }
 
-    public static List<ImageElement> getItems() {
+    public static List<FotoData> getItems() {
         return items;
     }
 
-    public static void setItems(List<ImageElement> items) {
-        MyAdapter.items = items;
-    }
 }

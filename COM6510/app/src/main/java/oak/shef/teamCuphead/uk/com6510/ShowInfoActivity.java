@@ -5,15 +5,11 @@
 package oak.shef.teamCuphead.uk.com6510;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,23 +22,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponsere;
-import oak.shef.teamCuphead.uk.com6510.database.FotoData;
+import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
 import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
+import oak.shef.teamCuphead.uk.com6510.view.CameraActivity;
+import oak.shef.teamCuphead.uk.com6510.view.MyAdapter;
 
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.gms.maps.SupportMapFragment;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCallback {
     private Activity activity;
@@ -51,7 +43,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
     private TextView textViewTitle, textEditTitle, textViewDesc, textEditDesc, textViewDate, FocusField;
     private Double Latitude, Longitude;
     private SupportMapFragment mapFragment;
-    private ImageElement element;
+    private FotoData element;
     private ImageView imageView;
     public Activity getActivity() {
         return activity;
@@ -103,29 +95,20 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 textEditDesc.setVisibility(View.INVISIBLE);
                 textViewDesc.setVisibility(View.VISIBLE);
                 element = MyAdapter.getItems().get(position);
-                fd=element.fotodata;
-                if (element.image!=-1) {
-                    imageView.setImageResource(element.image);
-                } else if (element.file!=null) {
-                    Bitmap myBitmap = BitmapFactory.decodeFile(element.file.getAbsolutePath());
-                    //print
+                fd=element;
+
+
+                if (element!=null) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(element.getPath());
                     imageView.setImageBitmap(myBitmap);
-                }
-                else if (element.path!=null) {
-                    Bitmap myBitmap = BitmapFactory.decodeFile(element.path);
-                    imageView.setImageBitmap(myBitmap);
-                }
-                else if (element.fotodata!=null) {
-                    Bitmap myBitmap = BitmapFactory.decodeFile(element.fotodata.getPath());
-                    imageView.setImageBitmap(myBitmap);
-                    textViewTitle.setText(element.fotodata.getTitle());
-                    textEditTitle.setText(element.fotodata.getTitle());
-                    textViewDesc.setText(element.fotodata.getDescription());
-                    textEditDesc.setText(element.fotodata.getDescription());
-                    textViewDate.setText(element.fotodata.getDate());
-                    Latitude = (element.fotodata.getLatitude());
-                    Longitude = (element.fotodata.getLongitude());
-                    path=element.fotodata.getPath();
+                    textViewTitle.setText(element.getTitle());
+                    textEditTitle.setText(element.getTitle());
+                    textViewDesc.setText(element.getDescription());
+                    textEditDesc.setText(element.getDescription());
+                    textViewDate.setText(element.getDate());
+                    Latitude = (element.getLatitude());
+                    Longitude = (element.getLongitude());
+                    path=element.getPath();
                     Log.i("CheckPoint"," !6! "+"Latitude"+Latitude.toString()+ "Longitude:"+Longitude.toString());
                 }
             }
@@ -172,9 +155,9 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 new UpdateAsyncTask(mDBDao).execute(fd);
                 textEditTitle.setVisibility(View.INVISIBLE);
                 textEditDesc.setVisibility(View.INVISIBLE);
-                textViewTitle.setText(element.fotodata.getTitle());
+                textViewTitle.setText(element.getTitle());
                 textViewTitle.setVisibility(View.VISIBLE);
-                textViewDesc.setText(element.fotodata.getDescription());
+                textViewDesc.setText(element.getDescription());
                 textViewDesc.setVisibility(View.VISIBLE);
                 buttonSave.setVisibility(View.INVISIBLE);
                 RetriveFotodataWithPathAsyncTask retriveFotodataWithPathAsyncTask=new RetriveFotodataWithPathAsyncTask(mDBDao,new AsyncResponsere(){
@@ -183,13 +166,10 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
 
                             output.setTitle(textEditTitle.getText().toString());
-                            Log.i("CheckPoint",output.toString()+"  !2!  ");
+
                             output.setDescription(textEditDesc.getText().toString());
                             new UpdateAsyncTask(mDBDao).execute(output);
 
-                        }
-                        else if(output==null){
-                            Log.i("CheckPoint","we dont have this foto  !2!  ");
                         }
 
                     }
@@ -235,7 +215,6 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         }
         @Override
         protected Void doInBackground(final FotoData... fotoData) {
-            Log.i("CheckPoint"," !5! "+fotoData.toString());
 
             int i = mAsyncTaskDao.update(fotoData);
             return null;

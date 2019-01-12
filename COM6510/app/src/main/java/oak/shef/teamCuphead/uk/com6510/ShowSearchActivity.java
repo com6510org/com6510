@@ -13,9 +13,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import oak.shef.teamCuphead.uk.com6510.database.FotoData;
+import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
+import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
 import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
+import oak.shef.teamCuphead.uk.com6510.view.MyAdapter;
+import oak.shef.teamCuphead.uk.com6510.viewmodel.MyViewModel;
 
 
 public class ShowSearchActivity  extends AppCompatActivity {
@@ -25,7 +28,7 @@ public class ShowSearchActivity  extends AppCompatActivity {
     private MyViewModel myViewModel;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter  mAdapter;
-    private List<ImageElement> myPictureList = new ArrayList<>();
+    private List<FotoData> myPictureList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,14 +51,12 @@ public class ShowSearchActivity  extends AppCompatActivity {
       QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
             public void processFinish(List<FotoData> output) {
                 if (!output.isEmpty()){
-                    myPictureList.addAll(getFotoData(output));
-                    Log.i("CheckPoint",myPictureList.size()+" !3! ");
+                    myPictureList.addAll(output);
                     mAdapter= new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
                 }
                 else if(output.isEmpty()){
 
-                    Log.i("CheckPoint",myPictureList.size()+"  !2!  ");
 
                    mAdapter= new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
@@ -69,15 +70,6 @@ public class ShowSearchActivity  extends AppCompatActivity {
         queryAllAsyncTask.execute();
     }
 
-
-    private List<ImageElement> getFotoData(List<FotoData> returnedPath) {
-        List<ImageElement> imageElementList= new ArrayList<>();
-        for (FotoData path: returnedPath){
-            ImageElement element= new ImageElement(path);
-            imageElementList.add(element);
-        }
-        return imageElementList;
-    }
 
     public class QueryAllAsyncTask extends AsyncTask<Void, Void, List<FotoData>> {
         private MyDAO mAsyncTaskDao;

@@ -9,6 +9,8 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import oak.shef.teamCuphead.uk.com6510.model.FotoData;
+
 @Dao
 public interface MyDAO {
     @Insert
@@ -43,7 +45,7 @@ public interface MyDAO {
     List<FotoData> SearchFotos(String title, String desc, String date);
 
     @Query("SELECT * FROM fotoData WHERE date LIKE '%'||:date||'%'")
-    List<FotoData> SearchFotosByDate( String date);
+    List<FotoData> SearchFotosByDate(String date);
 
     @Query("SELECT * FROM fotoData WHERE title LIKE '%'||:title||'%'")
     List<FotoData> SearchFotosByTitle( String title);

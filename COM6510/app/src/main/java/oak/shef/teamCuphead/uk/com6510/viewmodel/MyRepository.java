@@ -1,4 +1,4 @@
-package oak.shef.teamCuphead.uk.com6510;
+package oak.shef.teamCuphead.uk.com6510.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import oak.shef.teamCuphead.uk.com6510.database.FotoData;
+import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
+import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
 import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
 
@@ -30,9 +31,9 @@ class MyRepository extends ViewModel{
         new deleteAsyncTask(mDBDao).execute();
     }
 
-    public void getAllPhotos(final AsyncResponse resp,final List<String> myPicturePath)
+    public void getAllPhotos(final AsyncResponse resp, final List<String> myPicturePath)
     {
-       selectAllPathAsyncTask selectAll=new selectAllPathAsyncTask(mDBDao,new AsyncResponse(){
+        selectAllPathAsyncTask selectAll=new selectAllPathAsyncTask(mDBDao,new AsyncResponse(){
             public void processFinish(List<FotoData> allPaths) {
                 // once the process of retrieving the data is finished
                 // if  there is something in the list
@@ -75,15 +76,12 @@ class MyRepository extends ViewModel{
                                 double lon = score2dimensionalityLon(longitude);
                                 if (latitudeRef != null && longitudeRef != null) {
                                     if (latitudeRef.equals("S")) {
-                                        Log.i("CheckPoint",  "  !9!  ");
                                         lat = -lat;
                                     }
                                     if (longitudeRef.equals("W")) {
-                                        Log.i("CheckPoint", "  !10!  ");
                                         lon = -lon;
                                     }
                                 }
-                                Log.i("Date", " path: " + path + "  Date: " + date + "  latitude: " + lat + "  longitude: " + lon + " latitudeRef: " + latitudeRef + " longitudeRef: " + longitudeRef);
                                 new insertAsyncTask(mDBDao).execute(new FotoData("Add a title", "Add a description", path,date,lat,lon,2.0));
                             }
                             catch(Exception ee){
@@ -145,8 +143,8 @@ class MyRepository extends ViewModel{
 
 
 
-     public void generateNewFoto(List<FotoData> listPhotos) {
-       Iterator<FotoData> iter;
+    public void generateNewFoto(List<FotoData> listPhotos) {
+        Iterator<FotoData> iter;
         for (iter = listPhotos.iterator(); iter.hasNext(); ) {
             FotoData f = iter.next();
             new insertAsyncTask(mDBDao).execute(f);
@@ -165,10 +163,8 @@ class MyRepository extends ViewModel{
         @Override
         protected Void doInBackground(final FotoData... params) {
             mAsyncTaskDao.insert(params[0]);
-            Log.i("MyRepository", "number generated: "+params[0].getPath()+"");
             // you may want to uncomment this to check if numbers have been inserted
             int ix=mAsyncTaskDao.howManyElements();
-            Log.i("InsertNumber", ix+"");
             return null;
         }
     }
@@ -198,7 +194,6 @@ class MyRepository extends ViewModel{
             mAsyncTaskDao.deleteAllFOTO();
             // you may want to uncomment this to check if numbers have been inserted
             int ix=mAsyncTaskDao.howManyElements();
-            Log.i("Delete number", ix+"");
             return null;
         }
     }

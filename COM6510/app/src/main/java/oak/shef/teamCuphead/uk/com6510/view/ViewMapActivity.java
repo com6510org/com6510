@@ -1,11 +1,13 @@
-package oak.shef.teamCuphead.uk.com6510;
+package oak.shef.teamCuphead.uk.com6510.view;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -46,15 +48,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import oak.shef.teamCuphead.uk.com6510.database.Foto;
-import oak.shef.teamCuphead.uk.com6510.database.FotoData;
+import oak.shef.teamCuphead.uk.com6510.APICode.MultiDrawable;
+import oak.shef.teamCuphead.uk.com6510.R;
+import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
+import oak.shef.teamCuphead.uk.com6510.model.Foto;
+import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
 import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
+import oak.shef.teamCuphead.uk.com6510.viewmodel.MyViewModel;
 
 public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallback,ClusterManager.OnClusterClickListener<Foto>, ClusterManager.OnClusterInfoWindowClickListener<Foto>, ClusterManager.OnClusterItemClickListener<Foto>, ClusterManager.OnClusterItemInfoWindowClickListener<Foto>{
 
     private MyDAO mDBDao;
-    private MarkerOptions mMarkOption;
     private GoogleMap mMap;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -64,20 +69,27 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     private static final int ACCESS_FINE_LOCATION = 123;
     private Location mCurrentLocation;
     private ClusterManager<Foto> mClusterManager;
-
+    private MyViewModel myViewModel;
+    private  Context context;
+    private Activity activity;
+    private Marker marker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         setUpMap();
+        context=this;
+        activity=this;
+        myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
         MyRoomDatabase db = MyRoomDatabase.getDatabase(this);
         mDBDao = db.myDao();
-
+        myViewModel.startLocationUpdates(context,activity);
         FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.myLocationButton);
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startLocationUpdates();
+         //       startLocationUpdates();
+                marker.setPosition(new LatLng(myViewModel.returnMyLocation().getLatitude(),myViewModel.returnMyLocation().getLongitude()));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 14.0f));
 
             }
@@ -91,7 +103,6 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         private final ImageView mImageView;
         private final ImageView mClusterImageView;
         private final int mDimension;
-
         public PersonRenderer() {
             super(getApplicationContext(),mMap , mClusterManager);
 
@@ -146,10 +157,8 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     private void addItems(){
         QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
             public void processFinish(List<FotoData> output) {
-                Log.i("CheckPoint",output.size()+" !1! ");
                 if (!output.isEmpty()){
                     for(int i=0;i<output.size();i++){
-                        Log.i("CheckPoint",output.get(i).toString()+" !1! ");
                         mClusterManager.addItem(new Foto(new LatLng(output.get(i).getLatitude(),output.get(i).getLongitude()),output.get(i).getTitle(),BitmapFactory.decodeFile(output.get(i).getPath()),output.get(i).getDescription()));
                     }
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(output.get(0).getLatitude(),output.get(0).getLongitude()), 14.0f));
@@ -224,34 +233,6 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
-    private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        ACCESS_FINE_LOCATION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-
-            return;
-        }
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null /* Looper */);
-    }
-
 
     @Override
     protected void onResume() {
@@ -262,19 +243,17 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        startLocationUpdates();
+        myViewModel.startLocationUpdates(context,activity);
     }
 
     private String mLastUpdateTime;
-    private Marker marker;
+
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             super.onLocationResult(locationResult);
             mCurrentLocation = locationResult.getLastLocation();
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            Log.i("MYMAP", "new location " + mCurrentLocation.toString());
-            MarkerOptions markerOptions=new MarkerOptions();
             if (mMap != null)
                 marker.setPosition(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
 
