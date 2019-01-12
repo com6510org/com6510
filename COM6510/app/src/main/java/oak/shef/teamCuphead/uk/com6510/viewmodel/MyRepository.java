@@ -86,7 +86,7 @@ class MyRepository extends ViewModel{
                                 new insertAsyncTask(mDBDao).execute(new FotoData("Add a title", "Add a description", path,date,lat,lon,2.0));
                             }
                             catch(Exception ee){
-                                Log.i("Date", "date or location is not exist");
+                                Log.i("Date", "Date or location does not exist");
                             }
 
 

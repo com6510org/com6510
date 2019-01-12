@@ -33,7 +33,7 @@ import oak.shef.teamCuphead.uk.com6510.viewmodel.MyViewModel;
 import oak.shef.teamCuphead.uk.com6510.R;
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
-import oak.shef.teamCuphead.uk.com6510.CommonMethod.ChangeFiletoFotodata;
+import oak.shef.teamCuphead.uk.com6510.CommonMethod.ChangeFileToFotodata;
 import oak.shef.teamCuphead.uk.com6510.CommonMethod.PermissionCheck;
 import oak.shef.teamCuphead.uk.com6510.CommonMethod.StoreIntoRoom;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -61,7 +61,7 @@ public class CameraActivity extends AppCompatActivity {
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
     private StoreIntoRoom storeIntoRoom=new StoreIntoRoom();
-    private ChangeFiletoFotodata changeFiletoFotodata=new ChangeFiletoFotodata();
+    private ChangeFileToFotodata changeFileToFotodata=new ChangeFileToFotodata();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,13 +148,10 @@ public class CameraActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // int id = item.getItemId();
 
         Intent intent1 = new Intent(this, SearchActivity.class);
         this.startActivity(intent1);
         return true;
-
-        //return super.onOptionsItemSelected(item);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -204,7 +201,7 @@ public class CameraActivity extends AppCompatActivity {
 
 
         }
-        myPictureList.addAll(changeFiletoFotodata.getFotoData(returnedPhotos,myViewModel.returnMyLocation()));
+        myPictureList.addAll(changeFileToFotodata.getFotoData(returnedPhotos,myViewModel.returnMyLocation()));
         mAdapter.notifyDataSetChanged();
         mRecyclerView.scrollToPosition(returnedPhotos.size() - 1);
         myViewModel.stopLocationUpdates();

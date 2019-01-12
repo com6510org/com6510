@@ -12,7 +12,7 @@ import java.util.List;
 
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 
-public class ChangeFiletoFotodata {
+public class ChangeFileToFotodata {
     private InitFunction initFunction=new InitFunction();
     public List<FotoData> getFotoData(List<File> returnedPhotos,Location mylocation) {
 
@@ -47,7 +47,7 @@ public class ChangeFiletoFotodata {
                 }
                 imageElementList.add(new FotoData("Add a title", "Add a description", path, date, lat, lon,1.0));
             } catch (Exception ee) {
-                Log.i("Date", "here date or location is not exist");
+                Log.i("Date", "Date or location does not exist");
             }
         }
 

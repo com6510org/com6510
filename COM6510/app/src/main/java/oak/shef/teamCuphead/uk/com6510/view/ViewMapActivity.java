@@ -1,9 +1,7 @@
 package oak.shef.teamCuphead.uk.com6510.view;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,7 +12,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -49,7 +46,7 @@ import java.util.Date;
 import java.util.List;
 
 import oak.shef.teamCuphead.uk.com6510.APICode.MultiDrawable;
-import oak.shef.teamCuphead.uk.com6510.CommonMethod.LocationUpdataFunction;
+import oak.shef.teamCuphead.uk.com6510.CommonMethod.LocationUpdateFunction;
 import oak.shef.teamCuphead.uk.com6510.R;
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
 import oak.shef.teamCuphead.uk.com6510.model.Foto;
@@ -74,7 +71,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     private  Context context;
     private Activity activity;
     private Marker marker;
-    private LocationUpdataFunction locationUpdataFunction=new LocationUpdataFunction();
+    private LocationUpdateFunction locationUpdateFunction =new LocationUpdateFunction();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,15 +81,15 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         activity=this;
         MyRoomDatabase db = MyRoomDatabase.getDatabase(this);
         mDBDao = db.myDao();
-        locationUpdataFunction.startLocationUpdates(context,activity);
-        Log.i("Date", "date or location is not exist");
+        locationUpdateFunction.startLocationUpdates(context,activity);
+
         FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.myLocationButton);
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
          //       startLocationUpdates();
-                marker.setPosition(new LatLng(locationUpdataFunction.ReturnMyCurrentLocation().getLatitude(),locationUpdataFunction.ReturnMyCurrentLocation().getLongitude()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationUpdataFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdataFunction.ReturnMyCurrentLocation().getLongitude()), 14.0f));
+                marker.setPosition(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()), 14.0f));
 
             }
         });
@@ -245,7 +242,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        locationUpdataFunction.startLocationUpdates(context,activity);
+        locationUpdateFunction.startLocationUpdates(context,activity);
     }
 
     private String mLastUpdateTime;

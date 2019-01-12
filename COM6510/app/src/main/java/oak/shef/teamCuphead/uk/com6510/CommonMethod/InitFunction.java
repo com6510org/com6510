@@ -49,7 +49,7 @@ public class InitFunction {
                 }
                 newList.add(new FotoData("Add a title", "Add a description", myPicturePath.get(i), date, lat, lon,2.0));
             } catch (Exception ee) {
-                Log.i("Date", "date or location is not exist");
+                Log.i("Date", "Date or location does not exist");
             }
         }
         return newList;

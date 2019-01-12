@@ -16,12 +16,12 @@ public class PermissionCheck {
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
 
     public void checkPermissions(final Context context,Activity activity) {
-        Log.i("ENTROO1",  "A PEDIR PERMISOS");
+
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Log.i("ENTROO",  "A PEDIR PERMISOS");
+
                     android.support.v7.app.AlertDialog.Builder alertBuilder = new android.support.v7.app.AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
                     alertBuilder.setTitle("Permission necessary");

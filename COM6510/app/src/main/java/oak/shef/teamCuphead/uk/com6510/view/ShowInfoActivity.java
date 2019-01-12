@@ -80,7 +80,6 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         int position=-1;
         if(b != null) {
             position = b.getInt("position");
-            Log.i("Date", position+"date or location is not exist");
             if (position!=-1){
                 imageView = (ImageView) findViewById(R.id.image);
                 textViewTitle = (TextView) findViewById(R.id.textViewTitle);
@@ -94,7 +93,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 textViewDesc.setVisibility(View.VISIBLE);
                 element = MyAdapter.getItems().get(position);
                 fd=element;
-                Log.i("Date", fd.toString()+"");
+
 
 
                 if (element!=null) {
@@ -108,7 +107,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                     Latitude = (element.getLatitude());
                     Longitude = (element.getLongitude());
                     path=element.getPath();
-                    Log.i("CheckPoint"," !6! "+"Latitude"+Latitude.toString()+ "Longitude:"+Longitude.toString());
+
                 }
             }
 

@@ -3,8 +3,6 @@ package oak.shef.teamCuphead.uk.com6510.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.google.maps.android.clustering.ClusterItem;
-
 @Entity()
 public class FotoData{
     @PrimaryKey(autoGenerate = true)

@@ -10,7 +10,7 @@ import android.location.Location;
 
 import java.util.List;
 
-import oak.shef.teamCuphead.uk.com6510.CommonMethod.LocationUpdataFunction;
+import oak.shef.teamCuphead.uk.com6510.CommonMethod.LocationUpdateFunction;
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponse;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import oak.shef.teamCuphead.uk.com6510.CommonMethod.InitFunction;
@@ -18,7 +18,7 @@ import oak.shef.teamCuphead.uk.com6510.CommonMethod.InitFunction;
 public class MyViewModel extends AndroidViewModel {
     private final MyRepository mRepository;
     private final InitFunction initFunction;
-    private final LocationUpdataFunction locationUpdataFunction;
+    private final LocationUpdateFunction locationUpdateFunction;
     LiveData<FotoData> fotoDataToDisplay;
     public MyViewModel(Application application) {
         super(application);
@@ -26,7 +26,7 @@ public class MyViewModel extends AndroidViewModel {
         mRepository = new MyRepository(application);
         initFunction = new InitFunction();
 
-        locationUpdataFunction = new LocationUpdataFunction() ;
+        locationUpdateFunction = new LocationUpdateFunction() ;
     }
 
 
@@ -78,12 +78,12 @@ public class MyViewModel extends AndroidViewModel {
         return initFunction.score2dimensionality(string);
     }
     public void startLocationUpdates(Context context,Activity activity){
-        locationUpdataFunction.startLocationUpdates(context,activity);
+        locationUpdateFunction.startLocationUpdates(context,activity);
     }
     public void stopLocationUpdates(){
-        locationUpdataFunction.stopLocationUpdates();
+        locationUpdateFunction.stopLocationUpdates();
     }
     public Location returnMyLocation(){
-        return locationUpdataFunction.ReturnMyCurrentLocation();
+        return locationUpdateFunction.ReturnMyCurrentLocation();
     }
 }

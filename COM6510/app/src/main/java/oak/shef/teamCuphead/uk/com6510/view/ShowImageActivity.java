@@ -51,7 +51,6 @@ public class ShowImageActivity extends AppCompatActivity {
             if (position!=-1){
                 ImageView imageView = (ImageView) findViewById(R.id.image);
                 FotoData element= MyAdapter.getItems().get(position);
-                Log.i("Date", element.toString()+"date or location is not exist");
 
                 if (element!=null) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(element.getPath());
