@@ -21,8 +21,15 @@ import android.widget.ImageView;
 import oak.shef.teamCuphead.uk.com6510.R;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 
+/**
+ * ShowImageActivity is the activity to display the photo selected from CameraActivity.
+ * it gets photo element from MyAdapter and display it.
+ * using Intent to pass photo data as bundle to SowInfoActivity
+ * <p>
+ * While activity first launched, photo is displayed in full screen until user touch
+ * on screen, floating button for inspecting detail information and navigation shows.
+ */
 public class ShowImageActivity extends AppCompatActivity {
-    private Activity activity;
     private FloatingActionButton fabShowInformation;
 
     @Override
@@ -30,7 +37,10 @@ public class ShowImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message2);
 
-        //make it full screen
+        /**
+         * hide navigation and actions bar
+         * make photo shown in full screen while first launch this activity
+         */
         ActionBar actionBar = getSupportActionBar();
         View decorView = getWindow().getDecorView();
         int option = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -39,9 +49,9 @@ public class ShowImageActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(option);
         actionBar.hide();
 
-        activity = this;
-
-
+        /**
+         * get photo element from MyAdapter
+         */
         final Bundle b = getIntent().getExtras();
         int position = -1;
         if (b != null) {
@@ -56,10 +66,11 @@ public class ShowImageActivity extends AppCompatActivity {
                     imageView.setImageBitmap(myBitmap);
                 }
             }
-
         }
 
-
+        /**
+         * floating button for showing detailed information on this photo
+         */
         fabShowInformation = (FloatingActionButton) findViewById(R.id.fab_show_information);
         fabShowInformation.setVisibility(View.INVISIBLE);
         fabShowInformation.setOnClickListener(new View.OnClickListener() {
@@ -71,11 +82,11 @@ public class ShowImageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
-    //not showing navigation and action bar while screen being touched
+    /**
+     * still hide navigation and action bar while screen focus changed
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -92,7 +103,9 @@ public class ShowImageActivity extends AppCompatActivity {
         }
     }
 
-    //show floating button and navigation while screen being touched
+    /**
+     * show floating button and navigation while screen being touched
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         fabShowInformation.setVisibility(View.VISIBLE);
@@ -105,7 +118,6 @@ public class ShowImageActivity extends AppCompatActivity {
         fabShowInformation.setVisibility(View.VISIBLE);
         return false;
     }
-
 
 }
 

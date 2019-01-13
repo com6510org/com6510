@@ -1,4 +1,4 @@
-package oak.shef.teamCuphead.uk.com6510.CommonMethod;
+package oak.shef.teamCuphead.uk.com6510.view;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import java.util.Calendar;
 
 import oak.shef.teamCuphead.uk.com6510.R;
 
-public class pickerActivity extends AppCompatActivity implements View.OnClickListener {
+public class PickerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String CERO = "0";
     private static final String SLASH = "/";

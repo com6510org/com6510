@@ -36,6 +36,28 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
+/**
+ * ShowInfoActivity is the activity to display detailed information of the photo in ShowImageActivity
+ * it retrieve the path of the photo from the photo element passed from ShowImageActivity and then
+ * using path to request other detailed information of this photo from database.
+ * detailed information being displayed includes:
+ * <ul>
+ * <li>The photo title
+ * <li>The photo description
+ * <li>The photo date
+ * <li>The photo location
+ * </ul>
+ * detailed information can be modified by the user includes:
+ * <ul>
+ * <li>The photo title
+ * <li>The photo description
+ * </ul>
+ * <p>
+ * While photo has location information, this activity will get its latitude
+ * and longitude and show a marker of this latitude and longitude on google map
+ * suppose the photo is without location information, a toast text is used to
+ * inform user that this photo does not have location information
+ */
 public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCallback {
     private Activity activity;
     private GoogleMap mMap;
@@ -46,17 +68,16 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
     private FotoData element;
     private ImageView imageView;
 
-    public Activity getActivity() {
-        return activity;
-    }
-
     private MyDAO mDBDao;
     private FotoData fd;
-    String path;
+    String path; //use path instead of id to retrieve photo information from database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        /**
+         * initialise database
+         */
         MyRoomDatabase db = MyRoomDatabase.getDatabase(this);
         mDBDao = db.myDao();
         activity = this;
@@ -65,32 +86,42 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
         setContentView(R.layout.activity_info);
 
-        //make it full screen
+        /**
+         * make it full screen but showing navigation
+         */
         ActionBar actionBar = getSupportActionBar();
         View decorView = getWindow().getDecorView();
         int option = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(option);
         actionBar.hide();
 
+        /**
+         * button for saving modified detailed information
+         */
         buttonSave = (Button) findViewById(R.id.buttonSave);
         buttonSave.setVisibility(View.INVISIBLE);
 
+        /**
+         * fragment for google map
+         */
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        /**
+         * get photo element passed from ShowImageActivity
+         */
         final Bundle b = getIntent().getBundleExtra("bundle");
         int position = -1;
         if (b != null) {
             position = b.getInt("position");
             if (position != -1) {
-                imageView = (ImageView) findViewById(R.id.image);
-                textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-                textEditTitle = (TextView) findViewById(R.id.textEditTitle);
-                textViewDesc = (TextView) findViewById(R.id.textViewDesc);
-                textEditDesc = (TextView) findViewById(R.id.textEditDesc);
-                textViewDate = (TextView) findViewById(R.id.textViewDate);
+                imageView = (ImageView) findViewById(R.id.image); //image view
+                textViewTitle = (TextView) findViewById(R.id.textViewTitle); //text view displaying title
+                textEditTitle = (TextView) findViewById(R.id.textEditTitle); //text view for editing title
+                textViewDesc = (TextView) findViewById(R.id.textViewDesc); //text view displaying description
+                textEditDesc = (TextView) findViewById(R.id.textEditDesc); //text view editing description
+                textViewDate = (TextView) findViewById(R.id.textViewDate); //text view displaying date
                 textEditTitle.setVisibility(View.INVISIBLE);
                 textViewTitle.setVisibility(View.VISIBLE);
                 textEditDesc.setVisibility(View.INVISIBLE);
@@ -98,7 +129,9 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 element = MyAdapter.getItems().get(position);
                 fd = element;
 
-
+                /**
+                 * get photo information from element
+                 */
                 if (element != null) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(element.getPath());
                     imageView.setImageBitmap(myBitmap);
@@ -110,19 +143,20 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                     Latitude = (element.getLatitude());
                     Longitude = (element.getLongitude());
                     if (Latitude != 0.0 && Longitude != 0.0) {
-                        mapFragment.getView().setVisibility(View.VISIBLE);
+                        mapFragment.getView().setVisibility(View.VISIBLE);  //hide google map while photo has location information
                     } else {
-                        mapFragment.getView().setVisibility(View.INVISIBLE);
+                        mapFragment.getView().setVisibility(View.INVISIBLE);  //hide google map while photo has no location information
                         Toast.makeText(this, "Location information not found", Toast.LENGTH_SHORT).show();
                     }
                     path = element.getPath();
-                    path = element.getPath();
-
                 }
             }
 
         }
 
+        /**
+         * while user click on displaying text view, hide displaying text view, show editing text view and save button
+         */
         textViewTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +166,9 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
+        /**
+         * while user click on displaying text view, hide displaying text view, show editing text view and save button
+         */
         textViewDesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +178,11 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
-
+        /**
+         * while user click on save button, get user input information using RetrieveFotodataWithPathAsyncTask
+         * and save these information into database using UpdateAsyncTask
+         * launch CameraActivity to refresh the initialised photo list
+         */
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,23 +197,17 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 textViewDesc.setText(element.getDescription());
                 textViewDesc.setVisibility(View.VISIBLE);
                 buttonSave.setVisibility(View.INVISIBLE);
-                RetriveFotodataWithPathAsyncTask retriveFotodataWithPathAsyncTask = new RetriveFotodataWithPathAsyncTask(mDBDao, new AsyncResponsere() {
+                RetrieveFotodataWithPathAsyncTask retriveFotodataWithPathAsyncTask = new RetrieveFotodataWithPathAsyncTask(mDBDao, new AsyncResponsere() {
                     public void processFinish(FotoData output) {
                         if (output != null) {
-
-
                             output.setTitle(textEditTitle.getText().toString());
-
                             output.setDescription(textEditDesc.getText().toString());
                             new UpdateAsyncTask(mDBDao).execute(output);
-
                         }
-
                     }
                 });
                 retriveFotodataWithPathAsyncTask.execute(path);
                 Intent intent = new Intent(getBaseContext(), CameraActivity.class);
-                intent.putExtra("bundle", b);
                 startActivity(intent);
             }
         });
@@ -180,15 +215,22 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
     }
 
-    public class RetriveFotodataWithPathAsyncTask extends AsyncTask<String, Void, FotoData> {
+    /**
+     * this method retrieves photo data from database according to its path
+     */
+    public class RetrieveFotodataWithPathAsyncTask extends AsyncTask<String, Void, FotoData> {
         private MyDAO mAsyncTaskDao;
         public AsyncResponsere delegate = null;
 
-        RetriveFotodataWithPathAsyncTask(MyDAO dao, AsyncResponsere asyncResponsere) {
+        RetrieveFotodataWithPathAsyncTask(MyDAO dao, AsyncResponsere asyncResponsere) {
             mAsyncTaskDao = dao;
             delegate = asyncResponsere;
         }
 
+        /**
+         * Class constructor.
+         * @param fotopath photo path.
+         */
         @Override
         protected FotoData doInBackground(final String... fotopath) {
 
@@ -202,11 +244,11 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-
+    /**
+     * this method update photo data in database
+     */
     private static class UpdateAsyncTask extends AsyncTask<FotoData, Void, Void> {
         private MyDAO mAsyncTaskDao;
-        private LiveData<FotoData> fotoData;
-
         UpdateAsyncTask(MyDAO dao) {
             mAsyncTaskDao = dao;
         }
@@ -219,7 +261,11 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-
+    /**
+     * add marker to the photo location on map and set zoom
+     *
+     * @param googleMap google map.
+     */
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -229,6 +275,9 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fotoposition, 14.0f));
     }
 
+    /**
+     * still full screen but showing navigation while focus changed
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
