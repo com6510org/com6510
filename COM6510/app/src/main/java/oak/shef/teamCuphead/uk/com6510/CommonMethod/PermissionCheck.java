@@ -15,6 +15,13 @@ public class PermissionCheck {
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 2987;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
 
+    /**
+     *
+     * This method is get the photo path from the gallery
+     * uri is the path of the images and we need retrive them from the MediaStore
+     * @param activity the activity which use this method
+     * @return Return the list of path which photo stores in the gallery
+     */
     public void checkPermissions(final Context context,Activity activity) {
 
         int currentAPIVersion = Build.VERSION.SDK_INT;

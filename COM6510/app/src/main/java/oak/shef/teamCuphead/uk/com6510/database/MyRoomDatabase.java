@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 
+/**
+ * This is week 6 initial database function
+ */
 @android.arch.persistence.room.Database(entities = {FotoData.class}, version = 2, exportSchema = false)
 public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract MyDAO myDao();
@@ -34,7 +37,7 @@ public abstract class MyRoomDatabase extends RoomDatabase {
     /**
      * Override the onOpen method to populate the database.
      * For this sample, we clear the database every time it is created or opened.
-     *
+     * <p>
      * If you want to populate the database only when the database is created for the 1st time,
      * override RoomDatabase.Callback()#onCreate
      */

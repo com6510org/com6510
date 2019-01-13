@@ -44,7 +44,17 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 
-
+/**
+ * This activity is the main activity showed in this app.
+ * In this activity include the Easyimage(2.0.3)
+ * Easyimage is used to add the camera and gallery function.
+ * Easyimage will return the file which the camera and gallery function
+ * returned. However, to improve the performance, we can only store the photo path in
+ * to Room database.
+ * ChangeFileToFotodate is to change the data from file to the FotoData.
+ * In this activity also need to listen the user's location through use the google map
+ * location request function.
+ */
 public class CameraActivity extends AppCompatActivity {
 
     private PermissionCheck permissionCheck;
@@ -60,8 +70,8 @@ public class CameraActivity extends AppCompatActivity {
     private MyViewModel myViewModel;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
-    private StoreIntoRoom storeIntoRoom=new StoreIntoRoom();
-    private ChangeFileToFotodata changeFileToFotodata=new ChangeFileToFotodata();
+    private StoreIntoRoom storeIntoRoom = new StoreIntoRoom();
+    private ChangeFileToFotodata changeFileToFotodata = new ChangeFileToFotodata();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +80,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        context =this;
+        context = this;
         activity = this;
         mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
@@ -81,9 +91,9 @@ public class CameraActivity extends AppCompatActivity {
         }
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
-        permissionCheck=new PermissionCheck();
-        //myViewModel.deleteAllElement();
-        permissionCheck.checkPermissions(context,activity);
+        permissionCheck = new PermissionCheck();
+        //myViewModel.deleteAllElement(); If you want to clean the database.
+        permissionCheck.checkPermissions(context, activity);
         AsyncResponse response = new AsyncResponse() {
             public void processFinish(List<FotoData> output) {
                 // once the process of retrieving the data is finished
@@ -99,7 +109,7 @@ public class CameraActivity extends AppCompatActivity {
                 }
                 //if the list is empty
                 else {
-                    myPicturePath=myViewModel.getImagesPath(activity);
+                    myPicturePath = myViewModel.getImagesPath(activity);
 
                     myPictureList.addAll(myViewModel.initData(myPicturePath));
                     myViewModel.generateNewFoto(myViewModel.initData(myPicturePath));
@@ -109,19 +119,20 @@ public class CameraActivity extends AppCompatActivity {
             }
         };
 
-        myPicturePath=myViewModel.getImagesPath(activity);
+        myPicturePath = myViewModel.getImagesPath(activity);
         myViewModel.getAllPhotos(response, myPicturePath);
         myViewModel.initFunction(this);
+        // set up the FloatingActionButton for openCamera
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myViewModel.startLocationUpdates(context,activity);
+                myViewModel.startLocationUpdates(context, activity);
                 EasyImage.openCamera(getActivity(), 0);
 
             }
         });
-
+        // set up the FloatingActionButton for openGallery
         FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
         fabGallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +141,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
+        // set up the FloatingActionButton for openMap
         FloatingActionButton ViewMAP = (FloatingActionButton) findViewById(R.id.view_map);
         ViewMAP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +165,8 @@ public class CameraActivity extends AppCompatActivity {
         this.startActivity(intent1);
         return true;
     }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -164,6 +178,10 @@ public class CameraActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            /**
+             * Easyimage will handle activity result and give back the result list
+             * @param imageFiles This is the lis of file which the user picked
+             */
             @Override
             public void onImagesPicked(List<File> imageFiles, EasyImage.ImageSource source, int type) {
                 onPhotosReturned(imageFiles);
@@ -179,6 +197,25 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Easyimage will handle activity result and give back the result list
+     * Here is retrive the Fotodata from the database.
+     * If the value not exist in the database , can add the photo in to Room.
+     * Set the adpter notify the change of the Mypicture list.
+     * The FotoDate includes:
+     * <ul>
+     * <li>The photo title
+     * <li>The photo description
+     * <li>The photo path
+     * <li>The photo date
+     * <li>The photo latitude
+     * <li>The photo longitude
+     * <li>The photo type
+     * </ul>
+     *
+     * @param returnedPhotos This is the lis of file which the user picked
+     */
     private void onPhotosReturned(List<File> returnedPhotos) {
         final List<FotoData> addedPhotos = new ArrayList<>();
 
@@ -190,22 +227,20 @@ public class CameraActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable final FotoData newValue) {
                     if (newValue == null) {
-                        List<FotoData> fdlist=storeIntoRoom.storeIntoRoom(finalPath,myViewModel.returnMyLocation());
+                        List<FotoData> fdlist = storeIntoRoom.storeIntoRoom(finalPath, myViewModel.returnMyLocation());
                         myViewModel.generateNewFoto(fdlist);
-                        ExifInterface exif = null;
-
-
                     }
                 }
             });
 
 
         }
-        myPictureList.addAll(changeFileToFotodata.getFotoData(returnedPhotos,myViewModel.returnMyLocation()));
+        myPictureList.addAll(changeFileToFotodata.getFotoData(returnedPhotos, myViewModel.returnMyLocation()));
         mAdapter.notifyDataSetChanged();
         mRecyclerView.scrollToPosition(returnedPhotos.size() - 1);
         myViewModel.stopLocationUpdates();
     }
+
     public Activity getActivity() {
         return activity;
     }
@@ -218,7 +253,7 @@ public class CameraActivity extends AppCompatActivity {
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        myViewModel.startLocationUpdates(context,activity);
+        myViewModel.startLocationUpdates(context, activity);
     }
 
 

@@ -40,7 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_image,
                 parent, false);
         View_Holder holder = new View_Holder(v);
-        context= parent.getContext();
+        context = parent.getContext();
         return holder;
     }
 
@@ -49,8 +49,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
-        if (holder!=null && items.get(position)!=null) {
-            if (items.get(position)!=null){
+        if (holder != null && items.get(position) != null) {
+            if (items.get(position) != null) {
                 Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).getPath());
                 holder.imageView.setImageBitmap(myBitmap);
                 holder.textView.setText(items.get(position).getTitle());
@@ -75,15 +75,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         return items.size();
     }
 
-    public class View_Holder extends RecyclerView.ViewHolder  {
+    public class View_Holder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
         TextView textViewDesc;
+
         View_Holder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image_item);
-            textView= (TextView) itemView.findViewById(R.id.textView);
-            textViewDesc= (TextView) itemView.findViewById(R.id.textViewDesc);
+            textView = (TextView) itemView.findViewById(R.id.textView);
+            textViewDesc = (TextView) itemView.findViewById(R.id.textViewDesc);
         }
 
 

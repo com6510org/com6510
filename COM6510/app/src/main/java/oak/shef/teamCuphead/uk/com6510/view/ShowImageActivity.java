@@ -24,6 +24,7 @@ import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 public class ShowImageActivity extends AppCompatActivity {
     private Activity activity;
     private FloatingActionButton fabShowInformation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,21 +39,19 @@ public class ShowImageActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(option);
         actionBar.hide();
 
-        activity= this;
-
-
+        activity = this;
 
 
         final Bundle b = getIntent().getExtras();
-        int position=-1;
-        if(b != null) {
+        int position = -1;
+        if (b != null) {
             position = b.getInt("position");
 
-            if (position!=-1){
+            if (position != -1) {
                 ImageView imageView = (ImageView) findViewById(R.id.image);
-                FotoData element= MyAdapter.getItems().get(position);
+                FotoData element = MyAdapter.getItems().get(position);
 
-                if (element!=null) {
+                if (element != null) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(element.getPath());
                     imageView.setImageBitmap(myBitmap);
                 }

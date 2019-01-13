@@ -23,6 +23,17 @@ import android.graphics.drawable.Drawable;
 
 import java.util.List;
 
+/**
+ * This is the code in google map api provide in the demo
+ * <p>
+ * The professor allowed us use it
+ * <p>
+ * https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
+ * This link is for the marker clustering
+ * <p>
+ * https://developers.google.com/maps/documentation/android-sdk/utility/setup
+ * This link is for the demo link.
+ */
 
 public class MultiDrawable extends Drawable {
 

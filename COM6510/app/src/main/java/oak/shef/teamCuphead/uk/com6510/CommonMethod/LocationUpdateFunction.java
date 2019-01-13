@@ -23,6 +23,14 @@ public class LocationUpdateFunction {
     private FusedLocationProviderClient mFusedLocationClient;
 
 
+    /**
+     * The code is week 8 map solution used
+     * This method is to request the location through use google map
+     * uri is the path of the images and we need retrive them from the MediaStore
+     * @param activity the activity which use this method
+     * @param context the context which we use this method
+     *
+     */
     public void startLocationUpdates(Context context, Activity activity) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?

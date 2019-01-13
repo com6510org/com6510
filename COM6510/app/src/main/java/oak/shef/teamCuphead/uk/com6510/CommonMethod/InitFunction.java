@@ -16,7 +16,15 @@ import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class InitFunction {
-
+    /**
+     * Initial the EasyImage . Set the taken photos not to copy into public gallery app.
+     * The app already add the taken photo from the cache.
+     * Set the copy the picked images to the public Gallery is false.
+     * The app already add the picked photo from the cache.
+     * Allow gallery can be multiple picked.
+     *
+     * @param context which context activity the easyimage used.
+     */
 
     public void initEasyImage(Context context) {
         EasyImage.configuration(context)
@@ -25,6 +33,34 @@ public class InitFunction {
                 .setCopyPickedImagesToPublicGalleryAppFolder(false)
                 .setAllowMultiplePickInGallery(true);
     }
+
+    /**
+     * The initData is to initial the data if the user is the first time open the App
+     * In this method will change the list of photo path to the FotoData.
+     * The FotoDate includes:
+     * <ul>
+     * <li>The photo title
+     * <li>The photo description
+     * <li>The photo path
+     * <li>The photo date
+     * <li>The photo latitude
+     * <li>The photo longitude
+     * <li>The photo type
+     * </ul>
+     *
+     * The title and description have default value "Add a title" and "Add a description"
+     * The path is the the photo path.
+     * The date is when the photo taken
+     * The latitude and longitude is where the photo taken.
+     *
+     * In this method, the location can not added by the google map listener .
+     * And the date can not added the same as system time.
+     *
+     * The type is 1.0(From garllery)
+     * @param myPicturePath the picture path list what we get from the gallery
+     * @return Return the list in FotoData which store into the Room
+     */
+
     public List<FotoData> initData(List<String> myPicturePath) {
         List<FotoData> newList = new ArrayList<FotoData>();
         for (int i = 0; i < myPicturePath.size(); i++) {
@@ -38,7 +74,7 @@ public class InitFunction {
                 String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
 
                 double lat = score2dimensionality(latitude);
-                double lon =score2dimensionality(longitude);
+                double lon = score2dimensionality(longitude);
                 if (latitudeRef != null && longitudeRef != null) {
                     if (latitudeRef.equals("S")) {
                         lat = -lat;
@@ -47,7 +83,7 @@ public class InitFunction {
                         lon = -lon;
                     }
                 }
-                newList.add(new FotoData("Add a title", "Add a description", myPicturePath.get(i), date, lat, lon,2.0));
+                newList.add(new FotoData("Add a title", "Add a description", myPicturePath.get(i), date, lat, lon, 2.0));
             } catch (Exception ee) {
                 Log.i("Date", "Date or location does not exist");
             }
@@ -71,7 +107,12 @@ public class InitFunction {
         return dimensionality;
     }
 
-
+    /**
+     * This method is get the photo path from the gallery
+     * uri is the path of the images and we need retrive them from the MediaStore
+     * @param activity the activity which use this method
+     * @return Return the list of path which photo stores in the gallery
+     */
 
     public ArrayList<String> getImagesPath(Activity activity) {
         Uri uri;

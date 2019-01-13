@@ -27,12 +27,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     final int year = c.get(Calendar.YEAR);
     EditText theDate;
     ImageButton getDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_view);
 
-        Button buttonSearch = (Button)findViewById(R.id.buttonSearch);
+        Button buttonSearch = (Button) findViewById(R.id.buttonSearch);
         final EditText textTitle = (EditText) findViewById(R.id.editTextTitle);
         final EditText textDesc = (EditText) findViewById(R.id.editTextDescription);
         theDate = (EditText) findViewById(R.id.editTextDate);
@@ -41,9 +42,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title= textTitle.getText().toString();
-                String desc= textDesc.getText().toString();
-                String date= theDate.getText().toString();
+                String title = textTitle.getText().toString();
+                String desc = textDesc.getText().toString();
+                String date = theDate.getText().toString();
                 Intent intent = new Intent(getBaseContext(), ShowSearchActivity.class);
                 intent.putExtra("TITLE", title);
                 intent.putExtra("DESC", desc);
@@ -68,9 +69,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 final int actualMonth = month + 1;
-                String fDay= (dayOfMonth < 10) ? CERO + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
+                String fDay = (dayOfMonth < 10) ? CERO + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
                 String fMonth = (actualMonth < 10) ? CERO + String.valueOf(actualMonth) : String.valueOf(actualMonth);
-                theDate.setText(year+ COLON + fMonth + COLON + fDay);
+                theDate.setText(year + COLON + fMonth + COLON + fDay);
 
 
             }

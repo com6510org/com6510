@@ -11,6 +11,9 @@ import java.util.List;
 
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 
+/**
+ * Write the SQL used in MyRepository
+ */
 @Dao
 public interface MyDAO {
     @Insert
@@ -48,26 +51,25 @@ public interface MyDAO {
     List<FotoData> SearchFotosByDate(String date);
 
     @Query("SELECT * FROM fotoData WHERE title LIKE '%'||:title||'%'")
-    List<FotoData> SearchFotosByTitle( String title);
+    List<FotoData> SearchFotosByTitle(String title);
 
     @Query("SELECT * FROM fotoData WHERE description LIKE '%'||:desc||'%'")
-    List<FotoData> SearchFotosByDescription( String desc);
+    List<FotoData> SearchFotosByDescription(String desc);
 
     @Query("SELECT * FROM fotoData WHERE description LIKE '%'||:desc||'%'  or  title LIKE '%'||:title||'%'")
-    List<FotoData> SearchFotosByDescTitle( String desc, String title);
+    List<FotoData> SearchFotosByDescTitle(String desc, String title);
 
     @Query("SELECT * FROM fotoData WHERE description LIKE '%'||:desc||'%'  or  title LIKE '%'||:date||'%'")
-    List<FotoData> SearchFotosByDescDate( String desc, String date);
+    List<FotoData> SearchFotosByDescDate(String desc, String date);
 
     @Query("SELECT * FROM fotoData WHERE title LIKE '%'||:title||'%'  or  title LIKE '%'||:date||'%'")
-    List<FotoData> SearchFotosByTitleDate( String title, String date);
+    List<FotoData> SearchFotosByTitleDate(String title, String date);
 
     @Delete
     void deleteAll(FotoData... fotoData);
 
     @Query("DELETE FROM fotodata WHERE 1")
     void deleteAllFOTO();
-
 
 
     @Query("SELECT COUNT(*) FROM fotoData")

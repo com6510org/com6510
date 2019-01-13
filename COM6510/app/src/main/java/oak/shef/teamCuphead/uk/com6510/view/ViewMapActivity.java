@@ -55,39 +55,41 @@ import oak.shef.teamCuphead.uk.com6510.database.MyDAO;
 import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
 import oak.shef.teamCuphead.uk.com6510.viewmodel.MyViewModel;
 
-public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallback,ClusterManager.OnClusterClickListener<Foto>, ClusterManager.OnClusterInfoWindowClickListener<Foto>, ClusterManager.OnClusterItemClickListener<Foto>, ClusterManager.OnClusterItemInfoWindowClickListener<Foto>{
+public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<Foto>, ClusterManager.OnClusterInfoWindowClickListener<Foto>, ClusterManager.OnClusterItemClickListener<Foto>, ClusterManager.OnClusterItemInfoWindowClickListener<Foto> {
 
     private MyDAO mDBDao;
     private GoogleMap mMap;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
+
     protected int getLayoutId() {
         return R.layout.activity_view_map;
     }
+
     private static final int ACCESS_FINE_LOCATION = 123;
     private Location mCurrentLocation;
     private ClusterManager<Foto> mClusterManager;
-    private MyViewModel myViewModel;
-    private  Context context;
+    private Context context;
     private Activity activity;
     private Marker marker;
-    private LocationUpdateFunction locationUpdateFunction =new LocationUpdateFunction();
+    private LocationUpdateFunction locationUpdateFunction = new LocationUpdateFunction();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         setUpMap();
-        context=this;
-        activity=this;
+        context = this;
+        activity = this;
         MyRoomDatabase db = MyRoomDatabase.getDatabase(this);
         mDBDao = db.myDao();
-        locationUpdateFunction.startLocationUpdates(context,activity);
+        locationUpdateFunction.startLocationUpdates(context, activity);
 
         FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.myLocationButton);
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-         //       startLocationUpdates();
+                //       startLocationUpdates();
                 marker.setPosition(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()), 14.0f));
 
@@ -102,8 +104,9 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         private final ImageView mImageView;
         private final ImageView mClusterImageView;
         private final int mDimension;
+
         public PersonRenderer() {
-            super(getApplicationContext(),mMap , mClusterManager);
+            super(getApplicationContext(), mMap, mClusterManager);
 
             View multiProfile = getLayoutInflater().inflate(R.layout.multi_profile, null);
             mClusterIconGenerator.setContentView(multiProfile);
@@ -117,6 +120,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
             mImageView.setPadding(padding, padding, padding, padding);
             mIconGenerator.setContentView(mImageView);
         }
+
         protected void onBeforeClusterItemRendered(Foto foto, MarkerOptions markerOptions) {
             // Draw a single person.
             // Set the info window to show their name.
@@ -124,6 +128,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
             Bitmap icon = mIconGenerator.makeIcon();
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(foto.title).snippet(foto.description);
         }
+
         protected void onBeforeClusterRendered(Cluster<Foto> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
@@ -153,16 +158,15 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
-    private void addItems(){
-        QueryAllAsyncTask queryAllAsyncTask=new QueryAllAsyncTask(mDBDao,new AsyncResponse(){
+    private void addItems() {
+        QueryAllAsyncTask queryAllAsyncTask = new QueryAllAsyncTask(mDBDao, new AsyncResponse() {
             public void processFinish(List<FotoData> output) {
-                if (!output.isEmpty()){
-                    for(int i=0;i<output.size();i++){
-                        mClusterManager.addItem(new Foto(new LatLng(output.get(i).getLatitude(),output.get(i).getLongitude()),output.get(i).getTitle(),BitmapFactory.decodeFile(output.get(i).getPath()),output.get(i).getDescription()));
+                if (!output.isEmpty()) {
+                    for (int i = 0; i < output.size(); i++) {
+                        mClusterManager.addItem(new Foto(new LatLng(output.get(i).getLatitude(), output.get(i).getLongitude()), output.get(i).getTitle(), BitmapFactory.decodeFile(output.get(i).getPath()), output.get(i).getDescription()));
                     }
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(output.get(0).getLatitude(),output.get(0).getLongitude()), 14.0f));
-                }
-                else if(output.isEmpty()){
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(output.get(0).getLatitude(), output.get(0).getLongitude()), 14.0f));
+                } else if (output.isEmpty()) {
 
                 }
 
@@ -213,19 +217,21 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
 
     public class QueryAllAsyncTask extends AsyncTask<Void, Void, List<FotoData>> {
         private MyDAO mAsyncTaskDao;
-        public AsyncResponse delegate=null;
+        public AsyncResponse delegate = null;
 
-        QueryAllAsyncTask(MyDAO dao,AsyncResponse asyncResponse) {
+        QueryAllAsyncTask(MyDAO dao, AsyncResponse asyncResponse) {
             mAsyncTaskDao = dao;
             delegate = asyncResponse;
         }
+
         @Override
         protected List<FotoData> doInBackground(final Void... voids) {
             // you may want to uncomment this to check if photo path have been inserted
-            List<FotoData> fd=new ArrayList<>();
-            fd=mAsyncTaskDao.retrieveAllFoto();
+            List<FotoData> fd = new ArrayList<>();
+            fd = mAsyncTaskDao.retrieveAllFoto();
             return fd;
         }
+
         @Override
         protected void onPostExecute(List<FotoData> result) {
             delegate.processFinish(result);
@@ -242,7 +248,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        locationUpdateFunction.startLocationUpdates(context,activity);
+        locationUpdateFunction.startLocationUpdates(context, activity);
     }
 
     private String mLastUpdateTime;
@@ -301,7 +307,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         mClusterManager.cluster();
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-        marker=mMap.addMarker(new MarkerOptions().position(sydney).title("Where you are"));
+        marker = mMap.addMarker(new MarkerOptions().position(sydney).title("Where you are"));
 
 
     }

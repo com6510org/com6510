@@ -21,14 +21,15 @@ import oak.shef.teamCuphead.uk.com6510.database.MyRoomDatabase;
 import oak.shef.teamCuphead.uk.com6510.viewmodel.MyViewModel;
 
 
-public class ShowSearchActivity  extends AppCompatActivity {
+public class ShowSearchActivity extends AppCompatActivity {
 
     private MyDAO mDBDao;
     private Activity activity;
     private MyViewModel myViewModel;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter  mAdapter;
+    private RecyclerView.Adapter mAdapter;
     private List<FotoData> myPictureList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,23 +48,22 @@ public class ShowSearchActivity  extends AppCompatActivity {
 
         myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
 
-        String title= getIntent().getStringExtra("TITLE");
-        String desc= getIntent().getStringExtra("DESC");
-        String date= getIntent().getStringExtra("DATE");
-      AsyncResponse resp=new AsyncResponse(){
+        String title = getIntent().getStringExtra("TITLE");
+        String desc = getIntent().getStringExtra("DESC");
+        String date = getIntent().getStringExtra("DATE");
+        AsyncResponse resp = new AsyncResponse() {
             public void processFinish(List<FotoData> output) {
-                if (!output.isEmpty()){
+                if (!output.isEmpty()) {
                     myPictureList.addAll(output);
-                    mAdapter= new MyAdapter(myPictureList);
+                    mAdapter = new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
-                }
-                else if(output.isEmpty()){
+                } else if (output.isEmpty()) {
 
 
-                   mAdapter= new MyAdapter(myPictureList);
+                    mAdapter = new MyAdapter(myPictureList);
                     mRecyclerView.setAdapter(mAdapter);
-                   TextView textMessage = (TextView) findViewById(R.id.textMessage);
-                   textMessage.setText("Sorry we couldn't find anything");
+                    TextView textMessage = (TextView) findViewById(R.id.textMessage);
+                    textMessage.setText("Sorry we couldn't find anything");
                 }
             }
         };
@@ -71,9 +71,6 @@ public class ShowSearchActivity  extends AppCompatActivity {
 
         myViewModel.searchIt(title, desc, date, resp);
     }
-
-
-
 
 
 }

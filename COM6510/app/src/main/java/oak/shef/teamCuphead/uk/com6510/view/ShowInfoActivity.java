@@ -44,12 +44,15 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
     private SupportMapFragment mapFragment;
     private FotoData element;
     private ImageView imageView;
+
     public Activity getActivity() {
         return activity;
     }
+
     private MyDAO mDBDao;
     private FotoData fd;
     String path;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -77,10 +80,10 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
 
         final Bundle b = getIntent().getBundleExtra("bundle");
-        int position=-1;
-        if(b != null) {
+        int position = -1;
+        if (b != null) {
             position = b.getInt("position");
-            if (position!=-1){
+            if (position != -1) {
                 imageView = (ImageView) findViewById(R.id.image);
                 textViewTitle = (TextView) findViewById(R.id.textViewTitle);
                 textEditTitle = (TextView) findViewById(R.id.textEditTitle);
@@ -92,11 +95,10 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 textEditDesc.setVisibility(View.INVISIBLE);
                 textViewDesc.setVisibility(View.VISIBLE);
                 element = MyAdapter.getItems().get(position);
-                fd=element;
+                fd = element;
 
 
-
-                if (element!=null) {
+                if (element != null) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(element.getPath());
                     imageView.setImageBitmap(myBitmap);
                     textViewTitle.setText(element.getTitle());
@@ -106,7 +108,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                     textViewDate.setText(element.getDate());
                     Latitude = (element.getLatitude());
                     Longitude = (element.getLongitude());
-                    path=element.getPath();
+                    path = element.getPath();
 
                 }
             }
@@ -132,12 +134,11 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         });
 
 
-
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title= textEditTitle.getText().toString();
-                String desc= textEditDesc.getText().toString();
+                String title = textEditTitle.getText().toString();
+                String desc = textEditDesc.getText().toString();
                 fd.setTitle(title);
                 fd.setDescription(desc);
                 textEditTitle.setVisibility(View.INVISIBLE);
@@ -147,9 +148,9 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                 textViewDesc.setText(element.getDescription());
                 textViewDesc.setVisibility(View.VISIBLE);
                 buttonSave.setVisibility(View.INVISIBLE);
-                RetriveFotodataWithPathAsyncTask retriveFotodataWithPathAsyncTask=new RetriveFotodataWithPathAsyncTask(mDBDao,new AsyncResponsere(){
+                RetriveFotodataWithPathAsyncTask retriveFotodataWithPathAsyncTask = new RetriveFotodataWithPathAsyncTask(mDBDao, new AsyncResponsere() {
                     public void processFinish(FotoData output) {
-                        if(output!=null){
+                        if (output != null) {
 
 
                             output.setTitle(textEditTitle.getText().toString());
@@ -169,13 +170,13 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         });
 
 
-
     }
 
     public class RetriveFotodataWithPathAsyncTask extends AsyncTask<String, Void, FotoData> {
         private MyDAO mAsyncTaskDao;
-        public AsyncResponsere delegate=null;
-        RetriveFotodataWithPathAsyncTask(MyDAO dao,AsyncResponsere asyncResponsere) {
+        public AsyncResponsere delegate = null;
+
+        RetriveFotodataWithPathAsyncTask(MyDAO dao, AsyncResponsere asyncResponsere) {
             mAsyncTaskDao = dao;
             delegate = asyncResponsere;
         }
@@ -183,10 +184,11 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         @Override
         protected FotoData doInBackground(final String... fotopath) {
 
-            String path=fotopath[0];
-            FotoData fd= mAsyncTaskDao.retrieveSelectFotoPath(path);
+            String path = fotopath[0];
+            FotoData fd = mAsyncTaskDao.retrieveSelectFotoPath(path);
             return fd;
         }
+
         protected void onPostExecute(FotoData result) {
             delegate.processFinish(result);
         }
@@ -200,6 +202,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
         UpdateAsyncTask(MyDAO dao) {
             mAsyncTaskDao = dao;
         }
+
         @Override
         protected Void doInBackground(final FotoData... fotoData) {
 
