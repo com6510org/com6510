@@ -98,7 +98,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
                     marker.setPosition(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()), 14.0f));
                 } else {
-                    Toast.makeText(context, "Please turn on location service in Setting - Security&Location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please turn on location service in Settings - Security&Location", Toast.LENGTH_SHORT).show();
                 }
             }
         });
