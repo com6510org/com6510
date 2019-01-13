@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import oak.shef.teamCuphead.uk.com6510.R;
 import oak.shef.teamCuphead.uk.com6510.database.AsyncResponsere;
@@ -112,6 +113,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                         mapFragment.getView().setVisibility(View.VISIBLE);
                     } else {
                         mapFragment.getView().setVisibility(View.INVISIBLE);
+                        Toast.makeText(this, "Location information not found", Toast.LENGTH_SHORT).show();
                     }
                     path = element.getPath();
                     path = element.getPath();
