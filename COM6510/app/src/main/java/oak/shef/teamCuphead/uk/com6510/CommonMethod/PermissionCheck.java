@@ -16,13 +16,15 @@ public class PermissionCheck {
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
 
     /**
+     * This week 4 solution code.
+     * This method is to request the device give the permission to the App.
+     * <p>
+     * The app need two permission "READ_EXTERNAL_STORAGE" and "WRITE_EXTERNAL_STORAGE"
      *
-     * This method is get the photo path from the gallery
-     * uri is the path of the images and we need retrive them from the MediaStore
-     * @param activity the activity which use this method
-     * @return Return the list of path which photo stores in the gallery
+     * @param context  The context is where ask the permission
+     * @param activity The activity is where ask the permission
      */
-    public void checkPermissions(final Context context,Activity activity) {
+    public void checkPermissions(final Context context, Activity activity) {
 
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {

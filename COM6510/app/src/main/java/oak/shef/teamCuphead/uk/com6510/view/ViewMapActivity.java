@@ -74,6 +74,12 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     private Marker marker;
     private LocationUpdateFunction locationUpdateFunction = new LocationUpdateFunction();
 
+    /**
+     * The activity is include the method which implement the google map clustering marker.
+     * This method is to request the location through use google map.
+     * Through use Asyctask to retrieve the data from Room.
+     * Add all the photo into Map view.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +111,9 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         private final ImageView mClusterImageView;
         private final int mDimension;
 
+        /**
+         * Set the size of the picture for the marker
+         */
         public PersonRenderer() {
             super(getApplicationContext(), mMap, mClusterManager);
 
@@ -129,6 +138,11 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(foto.title).snippet(foto.description);
         }
 
+        /**
+         * The google map code provide.
+         * https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
+         * This link is for the marker clustering where we learn from the website.
+         */
         protected void onBeforeClusterRendered(Cluster<Foto> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
@@ -158,6 +172,9 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
+    /**
+     * Add the photo to the clustering marker
+     */
     private void addItems() {
         QueryAllAsyncTask queryAllAsyncTask = new QueryAllAsyncTask(mDBDao, new AsyncResponse() {
             public void processFinish(List<FotoData> output) {
@@ -252,7 +269,9 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     private String mLastUpdateTime;
-
+    /**
+     * Update the location
+     */
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -290,6 +309,11 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
+    /**
+     * Set the google map.
+     * Add the clickListener for the clustering marker
+     * Set the first location marker on the map for showing where the user is.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

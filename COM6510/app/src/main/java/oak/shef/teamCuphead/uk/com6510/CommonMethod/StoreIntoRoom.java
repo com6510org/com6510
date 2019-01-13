@@ -13,6 +13,26 @@ import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 
 public class StoreIntoRoom {
     private InitFunction initFunction=new InitFunction();
+
+    /**
+     * ChangeFileToFotodate is to change the data from file to the FotoData.
+     * <p>
+     * The FotoDate includes:
+     * <ul>
+     * <li>The photo title
+     * <li>The photo description
+     * <li>The photo path
+     * <li>The photo date
+     * <li>The photo latitude
+     * <li>The photo longitude
+     * <li>The photo type
+     * </ul>
+     *
+     * @param path The single photo path.
+     * @param myLocation     The location where the photo taken
+     * @return Change the file to the FotoData and give the list which
+     * Include the photo information.
+     */
     public List<FotoData> storeIntoRoom(String path, Location myLocation) {
 
 
