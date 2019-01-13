@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -89,10 +90,16 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //       startLocationUpdates();
-                marker.setPosition(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()), 14.0f));
-
+                LocationManager locate = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                boolean gps = locate.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                boolean net = locate.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                if (gps || net) {
+                    //       startLocationUpdates();
+                    marker.setPosition(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationUpdateFunction.ReturnMyCurrentLocation().getLatitude(), locationUpdateFunction.ReturnMyCurrentLocation().getLongitude()), 14.0f));
+                } else {
+                    Toast.makeText(context, "Please turn on location service in Setting - Security&Location", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
