@@ -59,7 +59,11 @@ public class ChangeFileToFotodata {
                     if (longitudeRef.equals("W")) {
                         lon = -lon;
                     }
-                } else {
+                } else if(mylocation.getLatitude()==0&&mylocation.getLongitude()==0){
+                    lat=lat;
+                    lon=lon;
+                }
+                else {
                     lat = mylocation.getLatitude();
                     lon = mylocation.getLongitude();
                 }
