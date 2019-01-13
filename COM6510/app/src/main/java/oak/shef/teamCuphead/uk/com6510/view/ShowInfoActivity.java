@@ -108,6 +108,12 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
                     textViewDate.setText(element.getDate());
                     Latitude = (element.getLatitude());
                     Longitude = (element.getLongitude());
+                    if (Latitude != 0.0 && Longitude != 0.0) {
+                        mapFragment.getView().setVisibility(View.VISIBLE);
+                    } else {
+                        mapFragment.getView().setVisibility(View.INVISIBLE);
+                    }
+                    path = element.getPath();
                     path = element.getPath();
 
                 }
