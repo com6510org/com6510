@@ -12,7 +12,7 @@ import java.util.List;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 
 public class StoreIntoRoom {
-    private InitFunction initFunction=new InitFunction();
+    private InitFunction initFunction = new InitFunction();
 
     /**
      * ChangeFileToFotodate is to change the data from file to the FotoData.
@@ -28,8 +28,8 @@ public class StoreIntoRoom {
      * <li>The photo type
      * </ul>
      *
-     * @param path The single photo path.
-     * @param myLocation     The location where the photo taken
+     * @param path       The single photo path.
+     * @param myLocation The location where the photo taken
      * @return Change the file to the FotoData and give the list which
      * Include the photo information.
      */
@@ -60,12 +60,12 @@ public class StoreIntoRoom {
                 lon = myLocation.getLongitude();
 
             }
-            if(date==null){
+            if (date == null) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
                 Date fotodate = new Date(System.currentTimeMillis());
                 date = simpleDateFormat.format(fotodate);
             }
-            newList.add(new FotoData("Add a title", "Add a description", path, date, lat, lon,1.0));
+            newList.add(new FotoData("Add a title", "Add a description", path, date, lat, lon, 1.0));
 
         } catch (Exception ee) {
             Log.i("Date", "Date or location does not exist");

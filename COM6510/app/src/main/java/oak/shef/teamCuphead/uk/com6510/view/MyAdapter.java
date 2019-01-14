@@ -20,10 +20,31 @@ import java.util.List;
 import oak.shef.teamCuphead.uk.com6510.R;
 import oak.shef.teamCuphead.uk.com6510.model.FotoData;
 
+/**
+ * This code is week 4 solution Adapter
+ * The Adapter is working on the UI thread on the camera activity.
+ * It will help the developer to put the item from list in order and show
+ * in framework.
+ */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     static private Context context;
     private static List<FotoData> items;
 
+    /**
+     * Get the list of photo from CameraActivity
+     * The FotoDate includes:
+     * <ul>
+     * <li>The photo title
+     * <li>The photo description
+     * <li>The photo path
+     * <li>The photo date
+     * <li>The photo latitude
+     * <li>The photo longitude
+     * <li>The photo type
+     * </ul>
+     *
+     * @param items The list of photo information
+     */
     public MyAdapter(List<FotoData> items) {
         this.items = items;
     }
@@ -44,6 +65,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         return holder;
     }
 
+    /**
+     * Set the photo information into the items' layout
+     * The FotoDate includes:
+     * Those include title,description and the bitmap of the photo
+     *
+     * @param position The position is where the photo in the holder
+     * @param holder   The holder is which used to store the items.
+     */
     @Override
     public void onBindViewHolder(final View_Holder holder, final int position) {
 
@@ -69,7 +98,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         //animate(holder);
     }
 
-
+    /**
+     * Get the size of the items list.
+     */
     @Override
     public int getItemCount() {
         return items.size();
@@ -90,6 +121,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
     }
 
+    /**
+     * Get the items list.
+     */
     public static List<FotoData> getItems() {
         return items;
     }

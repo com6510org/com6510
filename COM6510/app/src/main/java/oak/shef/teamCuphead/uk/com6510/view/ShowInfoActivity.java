@@ -229,6 +229,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
         /**
          * Class constructor.
+         *
          * @param fotopath photo path.
          */
         @Override
@@ -249,6 +250,7 @@ public class ShowInfoActivity extends AppCompatActivity implements OnMapReadyCal
      */
     private static class UpdateAsyncTask extends AsyncTask<FotoData, Void, Void> {
         private MyDAO mAsyncTaskDao;
+
         UpdateAsyncTask(MyDAO dao) {
             mAsyncTaskDao = dao;
         }
