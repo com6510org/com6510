@@ -16,7 +16,9 @@ import android.widget.ImageButton;
 import java.util.Calendar;
 
 import oak.shef.teamCuphead.uk.com6510.R;
-
+/** This class creates the window of the search and when the button is clicked
+* it gets al the data from the view an passes the data to showSearchActivity
+ */
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String CERO = "0";
@@ -28,6 +30,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     EditText theDate;
     ImageButton getDate;
 
+    /**
+     * creates the view with the textviews and the buttons to get the date picker
+     * and on click it gets the data and send it with an intent to the next view
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +60,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-
+    /**
+     * when the button of the textview is clicked it shows a pop up window with the calendar
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

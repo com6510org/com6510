@@ -30,7 +30,11 @@ public class MyViewModel extends AndroidViewModel {
     }
 
 
-
+    /**
+     * gets the path
+     * @param path the path from the foto
+     * @return
+     */
     public LiveData<FotoData> getFotoDataToDisplay(String path) {
         fotoDataToDisplay = mRepository.getFoto(path);
         if (fotoDataToDisplay == null) {
@@ -39,7 +43,10 @@ public class MyViewModel extends AndroidViewModel {
         return fotoDataToDisplay;
     }
 
-
+    /**
+     * calls a function in the repository to create the new photos
+     * @param list
+     */
     public void generateNewFoto(List<FotoData> list) {
         mRepository.generateNewFoto(list);
 
@@ -52,12 +59,17 @@ public class MyViewModel extends AndroidViewModel {
         mRepository.deleteAll();
     }
 
-
+    /**
+     * gets all the data from the database to display in the view
+     * @param resp async response
+     * @param myPicturePath paths of all the photos of the gallery
+     */
     public void getAllPhotos(AsyncResponse resp, List<String> myPicturePath)
     {
         mRepository.getAllPhotos(resp, myPicturePath);
 
     }
+
     public void searchIt(String title, String desc, String date, AsyncResponse resp)
     {
         mRepository.searchAll(title,  desc,  date, resp);

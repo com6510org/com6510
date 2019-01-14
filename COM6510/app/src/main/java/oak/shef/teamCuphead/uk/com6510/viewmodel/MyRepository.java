@@ -25,13 +25,39 @@ class MyRepository extends ViewModel{
         mDBDao = db.myDao();
     }
 
+    /**
+     *
+     * @return it returns one foto from the database searching by the path
+     */
     public LiveData<FotoData> getFotoData() {
         return mDBDao.retrieveOneFoto();
     }
+    /**
+     * deletes everithing from the database
+     */
+
     public void deleteAll(){
         new deleteAsyncTask(mDBDao).execute();
     }
+
+    /**
+     * it seaarches the photos that have the same atributtes
+     * @param title of the photo
+     * @param desc of the photo
+     * @param date of the photo
+     * @param resp async response
+     */
     public void searchAll(String title, String desc, String date, AsyncResponse resp){ new searchAllAsyncTask(title, desc, date, mDBDao,  resp).execute();}
+
+    /**
+     * this method gets all the paths from the photos of the gallery and compare that list with
+     * a list of the paths that are saved in the database, if the paths that are in the data base
+     * are not in the paths from the gallery, it means that the photo was deleted so we proceed to delete it from
+     * the database
+     * if it is the other way around then it means is a new photo so we add it to the database
+     * @param resp async response
+     * @param myPicturePath list of all the paths of photos from the gallery
+     */
     public void getAllPhotos(final AsyncResponse resp, final List<String> myPicturePath)
     {
         selectAllPathAsyncTask selectAll=new selectAllPathAsyncTask(mDBDao,new AsyncResponse(){
@@ -124,7 +150,9 @@ class MyRepository extends ViewModel{
 
     }
 
-
+    /**
+     * this are all the async tasks that we use to insert, delete, search
+     */
     private static class insertAsyncTask extends AsyncTask<FotoData, Void, Void> {
         private MyDAO mAsyncTaskDao;
 
@@ -169,7 +197,9 @@ class MyRepository extends ViewModel{
         }
     }
 
-
+    /**
+     * select everything from the database with all the data
+     */
     private static class selectAllPathAsyncTask extends AsyncTask<Void, Void, List<FotoData>> {
         private MyDAO mAsyncTaskDao;
         public AsyncResponse delegate=null;
@@ -211,6 +241,11 @@ class MyRepository extends ViewModel{
             delegate.processFinish(result);
         }
     }
+
+    /**
+     * searchs for a picture with the corresponding title, description or date
+     * taking in account which of that data is there
+     */
     public class searchAllAsyncTask extends AsyncTask<Void, Void, List<FotoData>> {
         private MyDAO mAsyncTaskDao;
         public AsyncResponse delegate=null;

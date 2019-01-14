@@ -30,6 +30,11 @@ public class ShowSearchActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private List<FotoData> myPictureList = new ArrayList<>();
 
+    /**
+     * Gets the data send to it (title, description and date)
+     * and creates an async process and send it to the viewModel with the data previously retrieved
+     * finally it gets the data from the query back and display it in the view
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

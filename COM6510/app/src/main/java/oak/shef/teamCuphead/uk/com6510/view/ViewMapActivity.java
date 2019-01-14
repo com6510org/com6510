@@ -76,7 +76,7 @@ public class ViewMapActivity extends FragmentActivity implements OnMapReadyCallb
     private LocationUpdateFunction locationUpdateFunction = new LocationUpdateFunction();
 
     /**
-     * The activity is include the method which implement the google map clustering marker.
+     * The activity is to include the method which implement the google map clustering marker.
      * This method is to request the location through use google map.
      * Through use Asyctask to retrieve the data from Room.
      * Add all the photo into Map view.
