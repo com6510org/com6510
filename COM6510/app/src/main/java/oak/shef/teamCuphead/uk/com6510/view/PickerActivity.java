@@ -12,6 +12,10 @@ import java.util.Calendar;
 
 import oak.shef.teamCuphead.uk.com6510.R;
 
+/**
+ * this class creates a pop up window of the calendar and formats it in dd/mm/yyyy
+ * it is shown when the  button is clicked
+ */
 public class PickerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String CERO = "0";
@@ -33,6 +37,10 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    /**
+     * get the action of the button clicked in the respective view
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -42,6 +50,9 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * sets the date and format it in order
+     */
     private void getTheSelectedDate() {
         DatePickerDialog datePicker = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -53,10 +64,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
 
             }
-            //Estos valores deben ir en ese orden, de lo contrario no mostrara la fecha actual
-            /**
-             *También puede cargar los valores que usted desee
-             */
+
         }, year, month, day);
         datePicker.show();
 
